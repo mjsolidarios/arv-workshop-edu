@@ -1,32 +1,43 @@
-# React + TypeScript + Vite
+# Gamified Learning Workshop 2026
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A workshop website for **"Gamified Learning Using Augmented Reality, Motion-Based Interaction, and Generative AI"** — a faculty training event held on July 30, 2026 at WVSU Calinog Campus.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Vite** — development server and bundler
+- **React 19 + TypeScript** — UI framework
+- **Tailwind CSS v3** — utility-first styling
+- **shadcn/ui** — accessible component library
+- **React Router v7** — client-side routing
+- **Lucide React** — icon library
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Program of Activities** — full workshop schedule with exact times, activity titles, and facilitators
+- **Module Detail Pages** — in-depth content for each session including learning objectives, topic breakdowns, tool lists, and facilitator tips
+- **Workshop Output Guide** — requirements, accepted output formats, and device/tool specifications
+- **Light / Dark Mode** — theme toggle with localStorage persistence
+- **Responsive Layout** — table view on desktop, card timeline on mobile
+- **Black-and-white design** — clean monochrome theme using shadcn CSS variables
 
-## Expanding the Oxlint configuration
+## Getting Started
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## Build
+
+```bash
+npm run build
+npm run preview
+```
+
+## Lint
+
+```bash
+npm run lint
+```
