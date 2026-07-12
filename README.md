@@ -13,11 +13,13 @@ A workshop website for **"Gamified Learning Using Augmented Reality, Motion-Base
 
 ## Features
 
-- **Program of Activities** — full workshop schedule with exact times, activity titles, and facilitators
-- **Module Detail Pages** — in-depth content for each session including learning objectives, topic breakdowns, tool lists, and facilitator tips
-- **Workshop Output Guide** — requirements, accepted output formats, and device/tool specifications
+- **Program of Activities** — full workshop schedule with times, activity types, and facilitators
+- **Day learning outcomes** — clear end-of-day goals on the home page
+- **Module Detail Pages** — objectives, topic breakdowns, worked examples, sample AI prompts, try-this tasks, and facilitator tips
+- **Classroom Examples gallery** — filterable, ready-to-adapt activities across subjects with setup, play flow, assessment, and copyable prompts
+- **Workshop Output Guide** — requirements, quality checklist, accepted formats, and storyboard beats
 - **Light / Dark Mode** — theme toggle with localStorage persistence
-- **Responsive Layout** — table view on desktop, card timeline on mobile
+- **Responsive Layout** — table view on desktop, card timeline on mobile; mobile nav menu
 - **Black-and-white design** — clean monochrome theme using shadcn CSS variables
 
 ## Getting Started
@@ -41,3 +43,13 @@ npm run preview
 ```bash
 npm run lint
 ```
+
+## Content map
+
+| Route | Purpose |
+|-------|---------|
+| `/` | Program, outcomes, devices/tools |
+| `/modules` | Module cards for each session |
+| `/modules/:slug` | Full lesson content |
+| `/examples` | Classroom activity gallery |
+| `/output` | Expected workshop deliverable |
