@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import {
   Camera,
+  Check,
   CircleStop,
+  Copy,
   Hand,
   ImagePlus,
   LoaderCircle,
@@ -61,6 +63,46 @@ type UploadedImage = {
   url: string
   width: number
   height: number
+}
+
+const imageTrackingPrompt = `Build a responsive browser-based image-tracking demo called "Train and test your tracking images." Use Encantar.js image tracking (not QR scanning or markerless WebXR). Let the user upload one to three JPG, PNG, or WebP reference images, preview them, and register each image in an Encantar.js image tracker. After registration, provide a button that starts an inline camera session and clearly reports targetfound and targetlost events using the reference image name.
+
+Include loading, ready, running, permission-denied, no-camera, unsupported-WebGL2, and camera-busy states. Provide Stop camera and Reset controls. Keep all image registration and camera processing in the browser; never upload, save, or transmit the selected images or video frames. Use a mobile-friendly, accessible interface with concise instructions, visible tracking status, and a reminder to use detailed asymmetrical images in good lighting. Generate complete HTML, CSS, and JavaScript files plus setup and local HTTPS testing instructions.`
+
+const handTrackingPrompt = `Build a responsive browser game called "Index-finger target challenge" using Google MediaPipe Tasks Vision Hand Landmarker. Show a mirrored webcam preview with the 21 hand landmarks and connectors drawn on a canvas. Use landmark 8 (the index fingertip) as a visible cursor. Place one glowing target at a time at five predefined percentage-based positions; when the fingertip comes within about 10% of the target, add one point and move to the next target. Add an 800 ms hit cooldown so one touch cannot score repeatedly.
+
+Include Start hand tracking, Stop camera, Reset score, live score, and clear idle, model-loading, running, permission-denied, no-camera, and camera-busy states. Request only one hand, use VIDEO running mode, and keep inference entirely in the browser without recording or uploading frames. Make the layout mobile-friendly and accessible, stop every media track and animation frame on cleanup, and explain that the first model download requires internet access. Generate complete HTML, CSS, and JavaScript files plus local HTTPS testing instructions.`
+
+function WorkingPrompt({ prompt }: { prompt: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const copyPrompt = async () => {
+    try {
+      await navigator.clipboard.writeText(prompt)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1800)
+    } catch {
+      // Clipboard access may be blocked by the browser.
+    }
+  }
+
+  return (
+    <div className="rounded-lg border bg-muted/30 p-4">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-muted-foreground" />
+          <p className="text-sm font-semibold">Working prompt</p>
+        </div>
+        <Button type="button" size="sm" variant="outline" onClick={() => void copyPrompt()}>
+          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          {copied ? "Copied" : "Copy prompt"}
+        </Button>
+      </div>
+      <p className="whitespace-pre-line text-xs leading-relaxed text-muted-foreground">
+        {prompt}
+      </p>
+    </div>
+  )
 }
 
 function cameraErrorMessage(error: unknown) {
@@ -371,6 +413,7 @@ export function ImageTrackingDemo() {
             Source and license
           </a>
         </p>
+        <WorkingPrompt prompt={imageTrackingPrompt} />
       </CardContent>
     </Card>
   )
@@ -629,6 +672,7 @@ export function HandTrackingDemo() {
           The first model download requires internet access. For best results, keep one
           hand in frame, face your palm toward the camera, and use even lighting.
         </p>
+        <WorkingPrompt prompt={handTrackingPrompt} />
       </CardContent>
     </Card>
   )

@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { DownloadPdfButton } from "@/components/DownloadPdfButton"
 import { workshopMeta, scheduleItems, type ScheduleItem } from "@/data/workshop"
 
 function kindBadge(item: ScheduleItem) {
@@ -89,6 +90,7 @@ export function ProgramPage() {
                 Output guide
               </Link>
             </Button>
+            <DownloadPdfButton className="w-full sm:w-auto justify-center" />
           </div>
         </div>
       </section>

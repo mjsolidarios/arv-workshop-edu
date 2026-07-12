@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { DownloadPdfButton } from "@/components/DownloadPdfButton"
 import { moduleDetails, scheduleItems, type ScheduleItem } from "@/data/workshop"
 
 function kindMeta(item: ScheduleItem) {
@@ -35,14 +36,17 @@ export function ModulesPage() {
 
   return (
     <div className="container py-6 sm:py-8 max-w-5xl">
-      <div className="mb-6 sm:mb-8 max-w-2xl">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight">
-          Workshop Modules
-        </h1>
-        <p className="text-muted-foreground leading-relaxed">
-          Detailed guides for each session: learning objectives, topic breakdowns,
-          worked classroom examples, sample AI prompts, and facilitator tips.
-        </p>
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div className="max-w-2xl">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2 tracking-tight">
+            Workshop Modules
+          </h1>
+          <p className="text-muted-foreground leading-relaxed">
+            Detailed guides for each session: learning objectives, topic breakdowns,
+            worked classroom examples, sample AI prompts, and facilitator tips.
+          </p>
+        </div>
+        <DownloadPdfButton className="w-full sm:w-auto shrink-0 justify-center" />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
