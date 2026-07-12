@@ -203,11 +203,6 @@ function addModule(doc: PdfDocument, module: ModuleDetail, moduleNumber: number)
     y = addBullets(doc, module.tryThis, y)
   }
 
-  if (module.tips?.length) {
-    y = addSectionHeading(doc, "Facilitator tips", y + 3)
-    y = addBullets(doc, module.tips, y)
-  }
-
   if (module.references?.length) {
     y = addSectionHeading(doc, "References and further reading", y + 3)
     module.references.forEach((reference) => {
@@ -256,7 +251,7 @@ export async function downloadWorkshopPdf() {
   doc.text(pdfText(workshopMeta.eventType), 22, coverEnd + 28)
   doc.setFontSize(10)
   doc.text("Program of activities, learning objectives, detailed module notes,", 22, 246)
-  doc.text("worked examples, AI prompts, facilitator tips, and references.", 22, 252)
+  doc.text("worked examples, AI prompts, and references.", 22, 252)
   doc.setFont("helvetica", "bold")
   doc.text(pdfText(`Resource person: ${workshopMeta.resourcePerson}`), 22, 270)
 
