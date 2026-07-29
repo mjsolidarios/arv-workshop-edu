@@ -13,6 +13,7 @@ export const workshopMeta = {
     "Smartphone with camera",
   ],
   tools: [
+    "Gemini Notebook",
     "Google Stitch",
     "Google AI Studio",
     "Encantar.js",
@@ -32,7 +33,7 @@ export const workshopMeta = {
   learningOutcomes: [
     "Differentiate gamified learning from game-based learning and apply core game elements to a real lesson.",
     "Design a simple camera-based activity using AR markers, gestures, or body poses.",
-    "Use Google Stitch to plan an accessible app interface and Google AI Studio to develop the working classroom app and its content.",
+    "Use Gemini Notebook for lesson planning that integrates AR or motion interaction, Google Stitch for an accessible app interface, and Google AI Studio to develop the working classroom app and its content.",
     "Produce a demonstrable output (working demo, prototype, activity guide, or storyboard) ready for classroom try-out.",
   ],
 }
@@ -110,6 +111,7 @@ export const scheduleItems: ScheduleItem[] = [
     kind: "hands-on",
     description: [
       "Overview of the steps in creating a simple interactive learning activity",
+      "Using Gemini Notebook to plan the lesson and integrate AR or motion interaction into the learning design",
       "Using Google Stitch to plan the user flow and design the app interface",
       "Using Google AI Studio to develop the AR and vision-controlled learning apps, including their lesson content and interface",
       "Creating simple activities in which digital objects appear through a smartphone camera",
@@ -140,6 +142,7 @@ export const scheduleItems: ScheduleItem[] = [
       "Connecting learning outcomes with game objectives and challenges",
       "Designing simple rules, points, levels, rewards, and feedback",
       "Making activities enjoyable while keeping the lesson meaningful",
+      "Using Gemini Notebook to plan lessons that integrate AR and motion-based interaction",
       "Using augmented reality and body movements to encourage participation",
       "Designing activities that use hand gestures, body poses, or tracked reference images",
       "Using generative AI to prepare questions, stories, hints, instructions, and feedback",
@@ -168,6 +171,7 @@ export const scheduleItems: ScheduleItem[] = [
     description: [
       "Identify a course topic, course learning outcome, or teaching-and-learning concern",
       "Identify the target learners and expected learning outcome",
+      "Use Gemini Notebook to plan the lesson and integrate AR or motion interaction with the course outcome",
       "Design a simple game objective, challenge, rules, and reward system",
       "Use Google Stitch to plan the app screens, user flow, and visual design",
       "Use Google AI Studio to develop the AR or vision-controlled app and generate its questions, instructions, and activity content",
@@ -318,7 +322,8 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       {
         heading: "Generative AI as a Teacher's Assistant",
         points: [
-          "Tools like Google AI Studio draft lesson plans, quiz items, instructions, and stories in seconds.",
+          "Gemini Notebook supports lesson planning: course outcomes, authentic tasks, AR or motion interaction choices, materials, and assessment evidence in one working notebook.",
+          "Tools like Google AI Studio then draft quiz items, app content, instructions, and stories once the lesson plan is clear.",
           "Faculty remain accountable for accuracy, disciplinary context, intellectual rigor, and appropriateness for the course level.",
           "AI can generate differentiated versions of the same content for basic, intermediate, and advanced learners.",
           "AI-generated images can become visual aids or possible tracking targets, but teachers must review accuracy, representation, and tracking suitability before use.",
@@ -336,7 +341,7 @@ export const moduleDetails: Record<string, ModuleDetail> = {
         ],
       },
     ],
-    tools: ["Google AI Studio", "Google MediaPipe", "Miro"],
+    tools: ["Gemini Notebook", "Google AI Studio", "Google MediaPipe", "Miro"],
     tips: [
       "Start with a simple gamification layer — adding points to an existing quiz is a low-barrier entry point.",
       "Use a Miro board to collect participants’ prior experience with AR and group similar responses before the demos.",
@@ -344,6 +349,12 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       "Invite one non-ICT teacher to try the demo first; peer success reduces anxiety.",
     ],
     samplePrompts: [
+      {
+        title: "Lesson plan with AR or motion in Gemini Notebook",
+        useFor: "Planning a lesson that integrates AR or motion-based interaction",
+        prompt:
+          "You are helping me plan a higher-education lesson in Gemini Notebook. Discipline: Environmental Science. Course/year level: first-year college. Course learning outcome: analyze the movement of water through an ecosystem and explain how human activity affects it. Produce a complete lesson plan that integrates either (a) smartphone image-tracked AR or (b) hand-gesture interaction. Include: lesson title, prior knowledge, 20-minute procedure, authentic task, chosen camera interaction and why it strengthens the outcome, materials and device setup, game elements (points, feedback, progress), evidence of learning, accessibility alternative when the camera is unavailable, privacy notes, and a short content outline for later app development. Keep classroom setup under 15 minutes.",
+      },
       {
         title: "Lesson idea generator",
         useFor: "Brainstorming a first activity idea",
@@ -384,6 +395,11 @@ export const moduleDetails: Record<string, ModuleDetail> = {
         label: "Google MediaPipe Tasks overview",
         url: "https://ai.google.dev/edge/mediapipe/solutions/tasks",
         note: "Official overview of the vision tasks that return landmarks and other model outputs.",
+      },
+      {
+        label: "Gemini Notebook (NotebookLM)",
+        url: "https://notebooklm.google/",
+        note: "Gemini-powered notebook for lesson planning, source synthesis, and structuring AR or motion-integrated learning designs.",
       },
       {
         label: "Google AI Studio",
@@ -453,6 +469,7 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       "Participants observe and follow along as the resource person walks through the end-to-end process of creating a simple interactive learning activity — from generating content with AI, to displaying AR objects through a smartphone camera, to making activities respond to hand gestures and body movements. Expect to try both laptop and phone workflows.",
     objectives: [
       "Follow the step-by-step process for building a basic interactive learning activity.",
+      "Use Gemini Notebook to plan the lesson and decide how AR or motion interaction supports the course outcome.",
       "Use Google Stitch to plan the screen flow and create an accessible interface design before development.",
       "Use Google AI Studio to develop a browser-based AR or vision-controlled app, including its lesson content, interface, and interaction logic.",
       "Understand how AR markers and camera-based image recognition work in a browser.",
@@ -465,17 +482,28 @@ export const moduleDetails: Record<string, ModuleDetail> = {
         points: [
           "Step 1: Define the course learning outcome and target college students in one sentence each.",
           "Step 2: Choose the interaction method: AR image tracking, hand gestures, or body-pose detection.",
-          "Step 3: Use Google Stitch to plan the user journey and design the welcome, instructions, camera activity, feedback, and results screens.",
-          "Step 4: Review the Stitch design for readability, accessibility, and clear camera guidance, then export or document the approved design.",
-          "Step 5: Bring the Stitch design into Google AI Studio and generate the working browser app, learning content, and camera-interaction code.",
-          "Step 6: Test on a laptop and a smartphone — camera permission, lighting, distance, and orientation matter.",
-          "Step 7: Refine the app for clarity, fairness, and learning effectiveness (not just “cool factor”).",
+          "Step 3: Use Gemini Notebook to plan the lesson—authentic task, game elements, materials, assessment evidence, and how AR or motion strengthens the outcome.",
+          "Step 4: Use Google Stitch to plan the user journey and design the welcome, instructions, camera activity, feedback, and results screens.",
+          "Step 5: Review the Stitch design for readability, accessibility, and clear camera guidance, then export or document the approved design.",
+          "Step 6: Bring the Stitch design into Google AI Studio and generate the working browser app, learning content, and camera-interaction code.",
+          "Step 7: Test on a laptop and a smartphone — camera permission, lighting, distance, and orientation matter.",
+          "Step 8: Refine the app for clarity, fairness, and learning effectiveness (not just “cool factor”).",
+        ],
+      },
+      {
+        heading: "Lesson Planning with Gemini Notebook (AR & Motion)",
+        points: [
+          "Start in Gemini Notebook with the syllabus outcome, topic sources, and class constraints (devices, class size, time).",
+          "Draft the lesson structure: opener, authentic task, camera interaction moment, feedback, and exit evidence of learning.",
+          "Explicitly justify AR image tracking, gesture, or pose—why that interaction helps students practice the outcome better than a worksheet alone.",
+          "List materials, privacy notes, accessibility alternatives, and a short content outline (questions, labels, feedback) for later build steps.",
+          "Carry the approved lesson plan into Google Stitch for interface design, then Google AI Studio for development.",
         ],
       },
       {
         heading: "Planning and Designing with Google Stitch",
         points: [
-          "Describe the learning objective, target learners, camera interaction, required screens, and the feeling the interface should create.",
+          "Describe the learning objective, target learners, camera interaction, required screens, and the feeling the interface should create—using the Gemini Notebook plan as the source of truth.",
           "Generate a mobile-first interface and connect the screens into a simple prototype so the complete learner journey can be reviewed before coding.",
           "Check that camera instructions, live status, feedback, score, and fallback controls are visible and understandable.",
           "Refine color contrast, text size, touch-target size, and portrait/landscape behavior before approving the design.",
@@ -524,7 +552,16 @@ export const moduleDetails: Record<string, ModuleDetail> = {
         ],
       },
     ],
-    tools: ["Google Stitch", "Google AI Studio", "Encantar.js", "Three.js", "PixiJS", "Pixi3D", "Google MediaPipe"],
+    tools: [
+      "Gemini Notebook",
+      "Google Stitch",
+      "Google AI Studio",
+      "Encantar.js",
+      "Three.js",
+      "PixiJS",
+      "Pixi3D",
+      "Google MediaPipe",
+    ],
     tips: [
       "Keep the live demo simple — a flashcard quiz where the correct answer appears as a 3D object is powerful and achievable.",
       "Pair participants: one holds the phone while the other interacts.",
@@ -532,6 +569,12 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       "When something fails (lighting, browser permission), treat it as a teachable classroom moment.",
     ],
     samplePrompts: [
+      {
+        title: "Plan the lesson in Gemini Notebook first",
+        useFor: "Lesson planning that integrates AR or motion before interface design",
+        prompt:
+          "Create a complete higher-education lesson plan in Gemini Notebook for a first-year Botany laboratory. Course learning outcome: identify major plant structures from specimen images and relate visible structure to function. Integrate smartphone image-tracked AR as the core interaction. Include: lesson title, time (20 minutes), prior knowledge, authentic task, why AR strengthens this outcome, materials, device setup, game elements (progress, score, feedback), step-by-step teacher procedure, evidence of learning, accessibility alternative without the camera, privacy notes, and a content outline for four plant structures (name, function, one analysis question, brief feedback). End with design notes ready to hand to Google Stitch and Google AI Studio.",
+      },
       {
         title: "Design the app in Google Stitch first",
         useFor: "Planning the interface and learner flow before development",
@@ -590,6 +633,11 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       "Print one detailed, asymmetrical reference image and test whether the activity tracks it in classroom lighting.",
     ],
     references: [
+      {
+        label: "Gemini Notebook (NotebookLM)",
+        url: "https://notebooklm.google/",
+        note: "Lesson-planning notebook for outcomes, authentic tasks, and AR or motion integration before interface design.",
+      },
       {
         label: "Google Stitch",
         url: "https://stitch.withgoogle.com/",
@@ -659,6 +707,16 @@ export const moduleDetails: Record<string, ModuleDetail> = {
         ],
       },
       {
+        heading: "Lesson Planning with Gemini Notebook (AR & Motion)",
+        points: [
+          "Use Gemini Notebook as the planning workspace: paste the CLO, topic notes, and constraints, then draft the full lesson structure.",
+          "Require every plan to name one camera interaction (AR image tracking, gesture, or pose) and one sentence explaining how it serves the outcome.",
+          "Capture game structure early—rules, points, levels, feedback—so Stitch and AI Studio implement a coherent design, not decoration.",
+          "Export or copy from the notebook: procedure, content outline, scoring, privacy/accessibility notes, and build handoff notes.",
+          "Do not skip this step when time is short: a clear notebook plan saves rebuild time later.",
+        ],
+      },
+      {
         heading: "Generative AI for Differentiated Content",
         points: [
           "Ask AI for a prerequisite refresher, course-level explanation, and advanced extension while preserving disciplinary terminology.",
@@ -686,18 +744,31 @@ export const moduleDetails: Record<string, ModuleDetail> = {
           "Student smartphones: best for small-group AR marker stations.",
           "No reliable internet: pre-download demos, use offline storyboard + printed markers for practice.",
           "Large class (40+): stations and rotations beat everyone scanning at once.",
-          "Beginner stack: Google AI Studio (app development) + MediaPipe (vision interaction) + paper scoring sheet.",
+          "Beginner stack: Gemini Notebook (lesson plan) + Google AI Studio (app development) + MediaPipe (vision interaction) + paper scoring sheet.",
         ],
       },
     ],
-    tools: ["Google AI Studio", "Google MediaPipe", "Encantar.js", "Miro"],
+    tools: [
+      "Gemini Notebook",
+      "Google AI Studio",
+      "Google MediaPipe",
+      "Encantar.js",
+      "Miro",
+    ],
     tips: [
       "Start from a lesson teachers already teach well — the game layer should enhance expertise, not replace it.",
       "Remind participants that a storyboard or activity guide is a valid, high-value output.",
       "Collect and cluster subject-area ideas in Miro to build a shared bank of applications.",
       "Use a design template on the board: Course outcome → Authentic task → Interaction → Evidence of learning → AI support.",
+      "Draft the AR or motion integration in Gemini Notebook before opening Stitch or AI Studio.",
     ],
     samplePrompts: [
+      {
+        title: "Plan an AR/motion lesson in Gemini Notebook",
+        useFor: "Lesson planning with integrated camera interaction",
+        prompt:
+          "Plan a complete 20-minute higher-education lesson in Gemini Notebook. Discipline: [discipline]. Course/year level: [level]. Course learning outcome: [paste outcome]. Camera interaction: [image-tracked AR OR hand gestures OR body pose]. Produce: lesson title, prior knowledge, authentic task, why the chosen interaction strengthens the outcome, materials and device setup, game rules and scoring, step-by-step procedure, evidence of learning, accessibility alternative, privacy notes, content outline (items or markers), and handoff notes for Google Stitch (screens) and Google AI Studio (build). Keep it feasible with 1 laptop and 1 smartphone.",
+      },
       {
         title: "Align the activity to a course outcome",
         useFor: "Design planning",
@@ -794,11 +865,12 @@ export const moduleDetails: Record<string, ModuleDetail> = {
         ],
       },
     ],
-    tools: ["Google AI Studio", "Miro"],
+    tools: ["Gemini Notebook", "Google AI Studio", "Miro"],
     tips: [
       "Keep consultations brief so every group gets airtime.",
       "Peer feedback within the same subject area is often the most practical.",
       "If an idea is too big, cut scope: one course outcome, one authentic task, one interaction, and one evidence source.",
+      "Ask groups to open their Gemini Notebook plan first so feedback targets pedagogy, not only the app build.",
     ],
     tryThis: [
       "State your idea in 30 seconds using the framework questions.",
@@ -816,6 +888,7 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       "Demonstrate that the activity addresses a real course learning outcome.",
       "Show that the activity uses the camera in a meaningful way.",
       "Include at least one game element such as points, challenges, levels, timers, rewards, or feedback.",
+      "Use Gemini Notebook to plan the lesson and integrate AR or motion interaction with the course outcome.",
       "Use Google Stitch to plan and review the app interface and learner journey before development.",
       "Use Google AI Studio to develop the AR or vision-controlled app and its learning content.",
     ],
@@ -825,11 +898,12 @@ export const moduleDetails: Record<string, ModuleDetail> = {
         points: [
           "Step 1 — Define the course and students (5 min): course outcome, year level, prior knowledge, class size, and devices.",
           "Step 2 — Choose the camera interaction (5 min): image-tracked AR, hand gesture, or body pose.",
-          "Step 3 — Plan and design in Google Stitch (10 min): create the screen flow, interface, feedback states, and fallback controls.",
-          "Step 4 — Finalize the game (10 min): rules, scoring, rewards, questions, and feedback using the approved screen flow.",
-          "Step 5 — Build in Google AI Studio (15 min): import or reference the Stitch design and generate the browser app and selected interaction.",
-          "Step 6 — Verify camera interaction (5 min): test the tracked image or gesture/pose path on the target device.",
-          "Step 7 — Test and package (10 min): record one needed fix and prepare the demo, guide, or storyboard.",
+          "Step 3 — Plan the lesson in Gemini Notebook (8 min): authentic task, procedure, game elements, evidence of learning, and AR/motion justification.",
+          "Step 4 — Plan and design in Google Stitch (8 min): create the screen flow, interface, feedback states, and fallback controls from the notebook plan.",
+          "Step 5 — Finalize the game content (7 min): rules, scoring, rewards, questions, and feedback using the approved screen flow.",
+          "Step 6 — Build in Google AI Studio (12 min): import or reference the Stitch design and generate the browser app and selected interaction.",
+          "Step 7 — Verify camera interaction (5 min): test the tracked image or gesture/pose path on the target device.",
+          "Step 8 — Test and package (10 min): record one needed fix and prepare the demo, guide, or storyboard.",
         ],
       },
       {
@@ -850,7 +924,7 @@ export const moduleDetails: Record<string, ModuleDetail> = {
           "Can be used on a laptop or smartphone.",
           "Uses the camera to display digital materials or respond to gestures/body movements.",
           "Includes at least one game element (points, challenges, levels, timers, rewards, or immediate feedback).",
-          "Uses generative AI for at least one component (content, images, instructions, or questions).",
+          "Uses generative AI for at least one component (lesson plan, content, images, instructions, or questions).",
           "Can be demonstrated or explained during the presentation.",
         ],
       },
@@ -863,20 +937,37 @@ export const moduleDetails: Record<string, ModuleDetail> = {
           "Rules, scoring, and safety/privacy notes",
           "Step-by-step teacher procedure",
           "Screenshots or sketches of each screen/scene",
+          "Gemini Notebook lesson plan summary (AR/motion integration)",
           "AI prompts you used (for reproducibility)",
           "Assessment: how you know learning happened",
         ],
       },
     ],
-    tools: ["Google Stitch", "Google AI Studio", "Encantar.js", "Three.js", "PixiJS", "Pixi3D", "Google MediaPipe"],
+    tools: [
+      "Gemini Notebook",
+      "Google Stitch",
+      "Google AI Studio",
+      "Encantar.js",
+      "Three.js",
+      "PixiJS",
+      "Pixi3D",
+      "Google MediaPipe",
+    ],
     tips: [
       "Ship one small complete activity rather than an ambitious unfinished one.",
+      "Lock the lesson plan in Gemini Notebook before opening Stitch—unclear outcomes slow every later step.",
       "Approve the learner flow in Stitch before asking AI Studio to build; late screen-flow changes consume testing time.",
       "Use AI Studio for the first working build, then reserve time to test the code, verify answers, simplify instructions, and add local context.",
       "Not coding? A detailed storyboard with wireframes is equally valued.",
       "Name a presenter and a demo operator before the next session starts.",
     ],
     samplePrompts: [
+      {
+        title: "Plan my AR/motion lesson in Gemini Notebook",
+        useFor: "Customizable lesson-planning prompt before Stitch and AI Studio",
+        prompt:
+          "Create a complete classroom lesson plan in Gemini Notebook. Discipline: [DISCIPLINE]. Course/year level: [LEVEL]. Course learning outcome: [PASTE OUTCOME]. App or activity title: [TITLE]. Camera interaction: [IMAGE-TRACKED AR / HAND GESTURE / BODY POSE]. Learner action: [DESCRIBE]. Game elements: [POINTS / LEVELS / TIMER / BADGES]. Produce: prior knowledge, authentic task, why this camera interaction strengthens the outcome, materials, device setup, privacy and accessibility notes, 15–20 minute procedure, scoring and feedback, evidence of learning, content outline for challenges or markers, and handoff notes for Google Stitch (screens and states) and Google AI Studio (libraries and build requirements). Keep it feasible with 1 laptop and 1 smartphone.",
+      },
       {
         title: "Plan my classroom app in Google Stitch",
         useFor: "Customizable design prompt before the workshop build",
@@ -911,7 +1002,12 @@ export const moduleDetails: Record<string, ModuleDetail> = {
           "One-minute oral recap by a student volunteer.",
         ],
         aiRole: "Items, feedback, instructions, and exit ticket.",
-        materials: ["Laptop + webcam", "Printed score sheet", "AI Studio draft"],
+        materials: [
+          "Laptop + webcam",
+          "Printed score sheet",
+          "Gemini Notebook lesson plan",
+          "AI Studio draft",
+        ],
       },
     ],
     tryThis: [

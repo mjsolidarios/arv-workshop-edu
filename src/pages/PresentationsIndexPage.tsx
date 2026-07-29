@@ -100,30 +100,51 @@ export function PresentationsIndexPage() {
           ))}
         </div>
 
-        <div className="rounded-xl border bg-muted/30 p-4 sm:p-5 mt-8">
-          <h2 className="text-sm font-semibold mb-2">Controls</h2>
-          <ul className="text-sm text-muted-foreground space-y-1.5 leading-relaxed">
-            <li>
-              <span className="font-mono text-foreground">→</span> /{" "}
-              <span className="font-mono text-foreground">Space</span> / tap right /
-              Next — reveal the next content fragment, then advance the slide
-            </li>
-            <li>
-              <span className="font-mono text-foreground">←</span> /{" "}
-              <span className="font-mono text-foreground">Backspace</span> / tap left /
-              Previous — hide the last fragment, then go back a slide
-            </li>
-            <li>
-              <span className="font-mono text-foreground">Home</span> /{" "}
-              <span className="font-mono text-foreground">End</span> — first / last slide
-            </li>
-            <li>
-              <span className="font-mono text-foreground">F</span> — toggle fullscreen
-            </li>
-            <li>
-              <span className="font-mono text-foreground">Esc</span> — leave fullscreen or return to this index
-            </li>
-          </ul>
+        <div className="rounded-xl border bg-muted/30 p-4 sm:p-5 mt-8 space-y-4">
+          <div>
+            <h2 className="text-sm font-semibold mb-2">Delivery tips</h2>
+            <ul className="text-sm text-muted-foreground space-y-1.5 leading-relaxed">
+              <li>
+                Press <span className="font-mono text-foreground">F</span> for
+                fullscreen — type is sized for reading from the back of the room.
+              </li>
+              <li>
+                Reveal one idea at a time with{" "}
+                <span className="font-mono text-foreground">Space</span> so the
+                room follows a single thought path.
+              </li>
+              <li>
+                Prefer dark text on light slides under classroom projectors; keep
+                lights dimmed if contrast looks soft.
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold mb-2">Controls</h2>
+            <ul className="text-sm text-muted-foreground space-y-1.5 leading-relaxed">
+              <li>
+                <span className="font-mono text-foreground">→</span> /{" "}
+                <span className="font-mono text-foreground">Space</span> / tap right /
+                Next — reveal the next content fragment, then advance the slide
+              </li>
+              <li>
+                <span className="font-mono text-foreground">←</span> /{" "}
+                <span className="font-mono text-foreground">Backspace</span> / tap left /
+                Previous — hide the last fragment, then go back a slide
+              </li>
+              <li>
+                <span className="font-mono text-foreground">Home</span> /{" "}
+                <span className="font-mono text-foreground">End</span> — first / last slide
+              </li>
+              <li>
+                <span className="font-mono text-foreground">F</span> — toggle fullscreen
+                (chrome auto-hides)
+              </li>
+              <li>
+                <span className="font-mono text-foreground">Esc</span> — leave fullscreen or return to this index
+              </li>
+            </ul>
+          </div>
         </div>
 
         <p className="text-center text-xs text-muted-foreground pt-4 pb-8">

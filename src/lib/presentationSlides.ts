@@ -23,6 +23,8 @@ export type PresentationSlide =
       title: string
       body: string
       bullets?: string[]
+      /** 0-based index of the first agenda item on this slide (continued numbering). */
+      bulletsStart?: number
     }
   | {
       id: string
@@ -52,12 +54,15 @@ export type PresentationSlide =
       kicker: string
       title: string
       subject: string
-      learners: string
-      competency: string
+      /** Omitted on continuation slides that only show steps or materials. */
+      learners?: string
+      competency?: string
       interaction: string
       gameElements: string[]
       howItWorks: string[]
-      aiRole: string
+      /** 0-based index of the first step on this slide (for continued numbering). */
+      howItWorksStart?: number
+      aiRole?: string
       materials: string[]
     }
   | {
@@ -98,7 +103,15 @@ export interface PresentationDeck {
   slides: PresentationSlide[]
 }
 
-const MAX_BULLETS = 5
+/** Keep slides sparse so large type remains readable from the back of the room. */
+const MAX_BULLETS = 4
+const MAX_HOW_IT_WORKS = 3
+const MAX_AGENDA = 4
+/**
+ * Soft cap for prompt text per slide at projector body scale
+ * (matches large deck type: ~text-xl → text-3xl).
+ */
+const MAX_PROMPT_CHARS = 360
 
 function chunk<T>(items: T[], size: number): T[][] {
   if (items.length === 0) return [[]]
@@ -107,6 +120,36 @@ function chunk<T>(items: T[], size: number): T[][] {
     out.push(items.slice(i, i + size))
   }
   return out
+}
+
+function partLabel(index: number, total: number): string {
+  return total > 1 ? ` (${index + 1}/${total})` : ""
+}
+
+/** Split long prompt text into continuation-sized chunks at natural breaks. */
+function splitPromptText(text: string, maxChars = MAX_PROMPT_CHARS): string[] {
+  const normalized = text.replace(/\r\n/g, "\n").trim()
+  if (normalized.length <= maxChars) return [normalized]
+
+  const chunks: string[] = []
+  let remaining = normalized
+
+  while (remaining.length > maxChars) {
+    const window = remaining.slice(0, maxChars)
+    const breakAt = Math.max(
+      window.lastIndexOf("\n\n"),
+      window.lastIndexOf("\n"),
+      window.lastIndexOf(". "),
+      window.lastIndexOf("; "),
+      window.lastIndexOf(", "),
+      window.lastIndexOf(" ")
+    )
+    const cut = breakAt > maxChars * 0.4 ? breakAt + 1 : maxChars
+    chunks.push(remaining.slice(0, cut).trim())
+    remaining = remaining.slice(cut).trim()
+  }
+  if (remaining) chunks.push(remaining)
+  return chunks.length > 0 ? chunks : [normalized]
 }
 
 function shortTitle(title: string): string {
@@ -143,7 +186,6 @@ function agendaFor(module: ModuleDetail): string[] {
   }
   if (module.workedExamples?.length) items.push("Worked classroom examples")
   if (module.samplePrompts?.length) items.push("Sample AI prompts")
-  if (module.tips?.length) items.push("Facilitator tips")
   if (module.tryThis?.length) items.push("Try-this tasks")
   items.push("Key takeaways")
   return items
@@ -159,15 +201,20 @@ function pushBulletSlides(
   const max = options?.max ?? MAX_BULLETS
   const groups = chunk(bullets, max)
   groups.forEach((group, index) => {
-    const part =
-      groups.length > 1 ? ` (${index + 1}/${groups.length})` : ""
+    const part = partLabel(index, groups.length)
+    const continued = index > 0 ? " · continued" : ""
     slides.push({
       id: `${baseId}-${index + 1}`,
       kind: "bullets",
-      kicker: options?.kicker,
+      kicker: options?.kicker
+        ? `${options.kicker}${continued}`
+        : index > 0
+          ? "Continued"
+          : undefined,
       title: `${title}${part}`,
       bullets: group,
-      footer: options?.footer,
+      // Footer only on the last part so it is not repeated mid-list.
+      footer: index === groups.length - 1 ? options?.footer : undefined,
     })
   })
 }
@@ -178,20 +225,59 @@ function buildExampleSlides(
   slug: string
 ) {
   examples.forEach((example, index) => {
+    const baseKicker = `Worked example ${index + 1} of ${examples.length}`
+    const baseId = `${slug}-example-${index + 1}`
+    const stepGroups = chunk(example.howItWorks, MAX_HOW_IT_WORKS)
+    const hasMaterials = example.materials.length > 0
+
+    // Context slide — learners, competency, AI role (never cramped with steps).
     slides.push({
-      id: `${slug}-example-${index + 1}`,
+      id: `${baseId}-context`,
       kind: "example",
-      kicker: `Worked example ${index + 1} of ${examples.length}`,
+      kicker: baseKicker,
       title: example.title,
       subject: example.subject,
       learners: example.learners,
       competency: example.competency,
       interaction: example.interaction,
       gameElements: example.gameElements,
-      howItWorks: example.howItWorks,
+      howItWorks: [],
       aiRole: example.aiRole,
-      materials: example.materials,
+      materials: [],
     })
+
+    // How-it-works continuation slides — limited steps so type stays large.
+    stepGroups.forEach((steps, groupIndex) => {
+      if (steps.length === 0) return
+      const part = partLabel(groupIndex, stepGroups.length)
+      slides.push({
+        id: `${baseId}-steps-${groupIndex + 1}`,
+        kind: "example",
+        kicker: `${baseKicker} · How it works${part}`,
+        title: example.title,
+        subject: example.subject,
+        interaction: example.interaction,
+        gameElements: example.gameElements,
+        howItWorks: steps,
+        howItWorksStart: groupIndex * MAX_HOW_IT_WORKS,
+        materials: [],
+      })
+    })
+
+    // Materials on its own continuation slide when present.
+    if (hasMaterials) {
+      slides.push({
+        id: `${baseId}-materials`,
+        kind: "example",
+        kicker: `${baseKicker} · Materials`,
+        title: example.title,
+        subject: example.subject,
+        interaction: example.interaction,
+        gameElements: example.gameElements,
+        howItWorks: [],
+        materials: example.materials,
+      })
+    }
   })
 }
 
@@ -201,13 +287,18 @@ function buildPromptSlides(
   slug: string
 ) {
   prompts.forEach((prompt, index) => {
-    slides.push({
-      id: `${slug}-prompt-${index + 1}`,
-      kind: "prompt",
-      kicker: `Sample prompt ${index + 1} of ${prompts.length}`,
-      title: prompt.title,
-      useFor: prompt.useFor,
-      prompt: prompt.prompt,
+    const parts = splitPromptText(prompt.prompt)
+    parts.forEach((text, partIndex) => {
+      const continued = partIndex > 0 ? " · continued" : ""
+      const part = partLabel(partIndex, parts.length)
+      slides.push({
+        id: `${slug}-prompt-${index + 1}-${partIndex + 1}`,
+        kind: "prompt",
+        kicker: `Sample prompt ${index + 1} of ${prompts.length}${continued}${part}`,
+        title: prompt.title,
+        useFor: prompt.useFor,
+        prompt: text,
+      })
     })
   })
 }
@@ -248,12 +339,28 @@ export function buildPresentationDeck(slug: string): PresentationDeck | undefine
     ],
   })
 
+  // Overview body alone, then agenda cards in sparse continuation slides.
   slides.push({
     id: `${slug}-overview`,
     kind: "overview",
     title: "What this block covers",
     body: module.overview,
-    bullets: agendaFor(module).slice(0, 8),
+  })
+  const agenda = agendaFor(module)
+  const agendaGroups = chunk(agenda, MAX_AGENDA)
+  agendaGroups.forEach((group, index) => {
+    const part = partLabel(index, agendaGroups.length)
+    slides.push({
+      id: `${slug}-overview-agenda-${index + 1}`,
+      kind: "overview",
+      title:
+        index === 0
+          ? `Agenda for this block${part}`
+          : `Agenda · continued${part}`,
+      body: "",
+      bullets: group,
+      bulletsStart: index * MAX_AGENDA,
+    })
   })
 
   slides.push({
@@ -321,18 +428,6 @@ export function buildPresentationDeck(slug: string): PresentationDeck | undefine
     buildPromptSlides(slides, module.samplePrompts, slug)
   }
 
-  if (module.tips?.length) {
-    slides.push({
-      id: `${slug}-tips-section`,
-      kind: "section",
-      kicker: "Facilitation",
-      title: "Tips for running this block",
-    })
-    pushBulletSlides(slides, `${slug}-tips`, "Facilitator tips", module.tips, {
-      kicker: "Tips",
-    })
-  }
-
   if (module.tryThis?.length) {
     slides.push({
       id: `${slug}-try-section`,
@@ -360,24 +455,32 @@ export function buildPresentationDeck(slug: string): PresentationDeck | undefine
   const takeaways = [
     ...module.objectives.slice(0, 3),
     ...(schedule?.description.slice(0, 2) ?? []),
-  ].slice(0, 5)
+  ].slice(0, 8)
 
   const { nextLabel, nextTitle } = neighborTitles(slug)
-
-  slides.push({
-    id: `${slug}-closing`,
-    kind: "closing",
-    title: "Key takeaways",
-    bullets:
-      takeaways.length > 0
-        ? takeaways
-        : [
-            "Keep the course learning outcome first.",
-            "Use camera interaction only when it strengthens the task.",
-            "Review every AI-generated artifact before class use.",
-          ],
-    nextLabel,
-    nextTitle,
+  const closingBullets =
+    takeaways.length > 0
+      ? takeaways
+      : [
+          "Keep the course learning outcome first.",
+          "Use camera interaction only when it strengthens the task.",
+          "Review every AI-generated artifact before class use.",
+        ]
+  const closingGroups = chunk(closingBullets, MAX_BULLETS)
+  closingGroups.forEach((group, index) => {
+    const part = partLabel(index, closingGroups.length)
+    const isLast = index === closingGroups.length - 1
+    slides.push({
+      id: `${slug}-closing-${index + 1}`,
+      kind: "closing",
+      title:
+        index === 0
+          ? `Key takeaways${part}`
+          : `Key takeaways · continued${part}`,
+      bullets: group,
+      nextLabel: isLast ? nextLabel : undefined,
+      nextTitle: isLast ? nextTitle : undefined,
+    })
   })
 
   return {

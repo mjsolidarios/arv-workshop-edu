@@ -242,7 +242,7 @@ export function ModuleDetailPage() {
               <h2 className="text-lg font-bold">Sample AI Prompts</h2>
             </div>
             <p className="text-sm text-muted-foreground mb-5">
-              Copy into Google AI Studio and replace bracketed fields with your
+              Copy into Gemini Notebook or Google AI Studio and replace bracketed fields with your
               lesson details. Always review AI output before classroom use.
             </p>
             <div className="space-y-4">
