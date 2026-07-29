@@ -31,6 +31,7 @@ This guide collects the facilitator-only notes for each workshop module. Keep it
 
 - Keep the live demo simple—a flashcard quiz where the correct answer appears as a 3D object is powerful and achievable.
 - Show the tool chain once: Gemini Notebook (lesson plan + AR/motion integration) → Google Stitch (screens) → Google AI Studio (build).
+- Backup builders if AI Studio tokens run out: Lovable (lovable.dev), Bolt (bolt.new), Replit (replit.com)—same prompt, same learning goal.
 - Pair participants: one holds the phone while the other interacts.
 - Leave 10–15 minutes of freeplay after the structured walkthrough.
 - When something fails (lighting or browser permission), treat it as a teachable classroom moment.
@@ -61,6 +62,7 @@ This guide collects the facilitator-only notes for each workshop module. Keep it
 - Lock the lesson plan in Gemini Notebook first (outcome, AR/motion choice, evidence); unclear plans waste Stitch and AI Studio time.
 - Approve the learner flow in Stitch before asking AI Studio to build; late screen-flow changes consume testing time.
 - Use AI Studio for the first working build, then reserve time to test the code, verify answers, simplify instructions, and add local context.
+- If AI Studio hits token or quota limits mid-block, move groups to Lovable, Bolt, or Replit immediately—do not wait for reset.
 - Not coding? A detailed storyboard with wireframes is equally valued.
 - Name a presenter and a demo operator before the next session starts.
 

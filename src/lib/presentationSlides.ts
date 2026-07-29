@@ -1,4 +1,5 @@
 import {
+  backupBuildToolBullets,
   moduleDetails,
   moduleOrder,
   scheduleItems,
@@ -392,6 +393,21 @@ export function buildPresentationDeck(slug: string): PresentationDeck | undefine
       bullets: module.tools,
       footer: "Prefer free or freemium accounts and browser-based demos when possible.",
     })
+
+    const usesAiBuilder = module.tools.some((t) =>
+      /AI Studio|Lovable|Bolt|Replit/i.test(t)
+    )
+    if (usesAiBuilder) {
+      slides.push({
+        id: `${slug}-backup-builders`,
+        kind: "bullets",
+        kicker: "Backup builders",
+        title: "If Google AI Studio runs out of tokens",
+        bullets: backupBuildToolBullets,
+        footer:
+          "lovable.dev · bolt.new · replit.com — same prompt and learning goal still apply.",
+      })
+    }
   }
 
   module.topics.forEach((topic, topicIndex) => {

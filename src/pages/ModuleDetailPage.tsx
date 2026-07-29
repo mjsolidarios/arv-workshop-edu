@@ -19,9 +19,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import {
+  backupBuildTools,
   classroomExamples,
   getModuleNeighbors,
   moduleDetails,
+  toolUrl,
 } from "@/data/workshop"
 
 export function ModuleDetailPage() {
@@ -94,12 +96,44 @@ export function ModuleDetailPage() {
             </h2>
           </div>
           <div className="flex flex-wrap gap-2">
-            {module.tools.map((tool) => (
-              <Badge key={tool} variant="secondary">
-                {tool}
-              </Badge>
-            ))}
+            {module.tools.map((tool) => {
+              const href = toolUrl(tool)
+              return href ? (
+                <a key={tool} href={href} target="_blank" rel="noreferrer">
+                  <Badge
+                    variant="secondary"
+                    className="cursor-pointer hover:bg-foreground hover:text-background"
+                  >
+                    {tool}
+                    <ExternalLink className="ml-1 h-3 w-3 opacity-60" />
+                  </Badge>
+                </a>
+              ) : (
+                <Badge key={tool} variant="secondary">
+                  {tool}
+                </Badge>
+              )
+            })}
           </div>
+          {module.tools.some((t) => /AI Studio|Lovable|Bolt|Replit/i.test(t)) && (
+            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+              AI Studio tokens out? Continue in{" "}
+              {backupBuildTools.map((t, i) => (
+                <span key={t.name}>
+                  {i > 0 && ", "}
+                  <a
+                    href={t.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-foreground underline-offset-2 hover:underline"
+                  >
+                    {t.name}
+                  </a>
+                </span>
+              ))}
+              .
+            </p>
+          )}
         </section>
       )}
 
@@ -242,7 +276,8 @@ export function ModuleDetailPage() {
               <h2 className="text-lg font-bold">Sample AI Prompts</h2>
             </div>
             <p className="text-sm text-muted-foreground mb-5">
-              Copy into Gemini Notebook or Google AI Studio and replace bracketed fields with your
+              Copy into Gemini Notebook, Google AI Studio, or a backup builder
+              (Lovable, Bolt, Replit) and replace bracketed fields with your
               lesson details. Always review AI output before classroom use.
             </p>
             <div className="space-y-4">

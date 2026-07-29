@@ -2,9 +2,11 @@ import { Link } from "react-router-dom"
 import {
   Download,
   ExternalLink,
+  FileText,
   Lightbulb,
   Printer,
   ScanLine,
+  Scissors,
   Target,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
@@ -24,6 +26,7 @@ export function MarkersPage() {
       <div className="mb-8 max-w-3xl">
         <div className="mb-3 flex flex-wrap gap-2">
           <Badge variant="outline">Printable AR targets</Badge>
+          <Badge variant="secondary">No scissors option</Badge>
           <Badge variant="outline">Encantar.js ready</Badge>
           <Badge variant="secondary">{markerSets.length} marker sets</Badge>
         </div>
@@ -32,10 +35,11 @@ export function MarkersPage() {
         </h1>
         <p className="leading-relaxed text-muted-foreground">
           Download or print high-detail image targets for the workshop’s AR
-          classroom examples. Use them with Encantar.js image tracking (or the
-          interactive demo on the Examples page). Designs are asymmetrical and
-          feature-rich so cameras can lock more reliably than plain icons or QR
-          codes.
+          classroom examples. Prefer{" "}
+          <span className="font-medium text-foreground">full-page markers</span>{" "}
+          if you cannot cut paper—print each page and place the whole sheet at
+          the station. Compact 2×2 sheets are also available when scissors are
+          on hand.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <Button asChild variant="outline" size="sm">
@@ -52,6 +56,30 @@ export function MarkersPage() {
           </Button>
         </div>
       </div>
+
+      <section className="mb-10 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-xl border-2 border-foreground/15 bg-background p-4 sm:p-5">
+          <div className="mb-2 flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            <h2 className="text-base font-semibold">Full page · no scissors</h2>
+          </div>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            One large marker centered on a letter-size page. Print the PDF pack
+            for a whole set, or open a single page PNG. Place the printed page
+            flat—no cutting required.
+          </p>
+        </div>
+        <div className="rounded-xl border bg-muted/30 p-4 sm:p-5">
+          <div className="mb-2 flex items-center gap-2">
+            <Scissors className="h-5 w-5" />
+            <h2 className="text-base font-semibold">2×2 sheet · needs cutting</h2>
+          </div>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            Four markers on one page to save paper. Cut along the borders before
+            class if you have scissors available.
+          </p>
+        </div>
+      </section>
 
       <section className="mb-10 rounded-xl border bg-muted/30 p-4 sm:p-5">
         <div className="mb-3 flex items-center gap-2">
@@ -100,40 +128,51 @@ export function MarkersPage() {
                   {set.summary}
                 </p>
               </div>
-              <div className="flex shrink-0 flex-wrap gap-2">
-                <Button asChild size="sm" variant="outline">
-                  <a href={set.sheetSrc} download={set.sheetFilename}>
-                    <Printer className="h-4 w-4" />
-                    Print sheet (2×2)
+              <div className="flex shrink-0 flex-col gap-2 sm:items-end">
+                <Button asChild size="sm">
+                  <a href={set.packSrc} download={set.packFilename}>
+                    <FileText className="h-4 w-4" />
+                    PDF pack · no scissors
                   </a>
                 </Button>
-                <Button asChild size="sm" variant="secondary">
-                  <a href={set.sheetSrc} target="_blank" rel="noreferrer">
-                    <ExternalLink className="h-4 w-4" />
-                    Open sheet
-                  </a>
-                </Button>
+                <div className="flex flex-wrap gap-2 sm:justify-end">
+                  <Button asChild size="sm" variant="outline">
+                    <a href={set.sheetSrc} download={set.sheetFilename}>
+                      <Scissors className="h-4 w-4" />
+                      2×2 sheet
+                    </a>
+                  </Button>
+                  <Button asChild size="sm" variant="secondary">
+                    <a href={set.packSrc} target="_blank" rel="noreferrer">
+                      <ExternalLink className="h-4 w-4" />
+                      Open PDF
+                    </a>
+                  </Button>
+                </div>
               </div>
             </div>
 
-            <Card className="mb-4 overflow-hidden">
+            <Card className="mb-4 overflow-hidden border-2 border-foreground/10">
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">Combined print sheet</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Printer className="h-4 w-4" />
+                  Full-page sample (no cutting)
+                </CardTitle>
                 <CardDescription>
-                  Four-up layout for quick classroom printing. Still prefer
-                  individual files when registering high-resolution targets.
+                  Preview of page 1. Download the PDF pack for all markers in
+                  this set, or open individual full-page PNGs below.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <a
-                  href={set.sheetSrc}
+                  href={set.markers[0]?.pageSrc}
                   target="_blank"
                   rel="noreferrer"
-                  className="block overflow-hidden rounded-lg border bg-background"
+                  className="block max-w-md overflow-hidden rounded-lg border bg-background"
                 >
                   <img
-                    src={set.sheetSrc}
-                    alt={`${set.title} printable sheet`}
+                    src={set.markers[0]?.pageSrc}
+                    alt={`${set.title} full-page marker sample`}
                     className="h-auto w-full"
                     loading="lazy"
                   />
@@ -142,12 +181,12 @@ export function MarkersPage() {
             </Card>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {set.markers.map((marker) => (
-                <Card key={marker.id} className="overflow-hidden">
+              {set.markers.map((m) => (
+                <Card key={m.id} className="overflow-hidden">
                   <div className="border-b bg-muted/20 p-3">
                     <img
-                      src={marker.src}
-                      alt={marker.title}
+                      src={m.src}
+                      alt={m.title}
                       className="mx-auto h-auto w-full max-w-sm rounded-md border bg-white"
                       loading="lazy"
                     />
@@ -155,34 +194,43 @@ export function MarkersPage() {
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between gap-2">
                       <CardTitle className="text-base leading-snug">
-                        {marker.title}
+                        {m.title}
                       </CardTitle>
-                      <Badge variant="outline" className="shrink-0 font-mono text-[10px]">
-                        ~{marker.printSizeCm} cm
+                      <Badge
+                        variant="outline"
+                        className="shrink-0 font-mono text-[10px]"
+                      >
+                        ~{m.printSizeCm} cm square
                       </Badge>
                     </div>
                     <CardDescription className="leading-relaxed">
-                      {marker.description}
+                      {m.description}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <p className="text-sm leading-relaxed">
                       <span className="font-medium">Learning cue: </span>
                       <span className="text-muted-foreground">
-                        {marker.learningCue}
+                        {m.learningCue}
                       </span>
                     </p>
                     <div className="flex flex-wrap gap-2">
                       <Button asChild size="sm">
-                        <a href={marker.src} download={marker.filename}>
+                        <a href={m.pageSrc} download={m.pageFilename}>
                           <Download className="h-4 w-4" />
-                          Download PNG
+                          Full page
                         </a>
                       </Button>
                       <Button asChild size="sm" variant="outline">
-                        <a href={marker.src} target="_blank" rel="noreferrer">
-                          <ExternalLink className="h-4 w-4" />
-                          Open
+                        <a href={m.pageSrc} target="_blank" rel="noreferrer">
+                          <Printer className="h-4 w-4" />
+                          Print page
+                        </a>
+                      </Button>
+                      <Button asChild size="sm" variant="secondary">
+                        <a href={m.src} download={m.filename}>
+                          <Download className="h-4 w-4" />
+                          Square PNG
                         </a>
                       </Button>
                     </div>
@@ -197,18 +245,21 @@ export function MarkersPage() {
       <section className="mt-12 rounded-xl border p-4 sm:p-5">
         <h2 className="mb-2 text-base font-semibold">Using markers in class</h2>
         <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
-          <li>Download the PNG files you will print (or print a 2×2 sheet and cut).</li>
           <li>
-            Register those same image files in your Encantar.js / AI Studio app as
-            reference targets.
+            Download a <strong className="text-foreground">PDF pack</strong> (no
+            scissors) or individual full-page PNGs.
           </li>
           <li>
-            Map each target-found event to faculty-verified content (structure
-            labels, history sources, critique prompts).
+            Print at 100% scale, place each page flat at a station, and tape
+            corners if fans or AC move the paper.
           </li>
           <li>
-            Always offer a non-camera fallback (printed flap, shared device, or
-            paper packet) for the same learning task.
+            Register the matching <strong className="text-foreground">square PNG</strong>{" "}
+            files in your Encantar.js / AI Studio app as reference targets.
+          </li>
+          <li>
+            Map each target-found event to faculty-verified content, and keep a
+            non-camera fallback for the same learning task.
           </li>
         </ol>
         <p className="mt-4 text-xs text-muted-foreground">

@@ -433,7 +433,8 @@ export function ExamplesPage() {
           </li>
           <li className="flex gap-2">
             <span className="mt-2 h-1.5 w-1.5 rounded-full bg-foreground/40 shrink-0" />
-            Copy a prompt into Gemini Notebook (lesson planning) or Google AI Studio (build), then edit it for your discipline,
+            Copy a prompt into Gemini Notebook (lesson planning) or Google AI Studio
+            (build; or Lovable / Bolt / Replit if tokens run out), then edit it for your discipline,
             course outcome, and year level.
           </li>
           <li className="flex gap-2">

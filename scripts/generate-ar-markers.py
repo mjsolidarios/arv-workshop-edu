@@ -450,6 +450,78 @@ def make_sheet(files, out_name, title):
     sheet.save(OUT / out_name, optimize=True)
 
 
+# Letter portrait @ 200 dpi — large enough to print, small enough for web downloads
+PAGE_W, PAGE_H = 1700, 2200
+PAGE_MARGIN = 90
+
+
+def make_full_page(marker_file: str, page_name: str, headline: str, subtitle: str):
+    """One marker centered on a full letter page — no scissors required."""
+    page = Image.new("RGB", (PAGE_W, PAGE_H), (255, 255, 255))
+    draw = ImageDraw.Draw(page)
+
+    # Header
+    draw.text((PAGE_MARGIN, 48), headline, fill=(20, 20, 20), font=font(36, True))
+    draw.text((PAGE_MARGIN, 98), subtitle, fill=(80, 80, 80), font=font(22))
+    draw.text(
+        (PAGE_MARGIN, 132),
+        "No scissors needed · place the whole page on the table · print at 100% · matte paper · WVSU ARV Workshop 2026",
+        fill=(100, 100, 100),
+        font=font(18),
+    )
+
+    # Footer strip
+    draw.rectangle([0, PAGE_H - 70, PAGE_W, PAGE_H], fill=(245, 245, 245))
+    draw.line([0, PAGE_H - 70, PAGE_W, PAGE_H - 70], fill=(20, 20, 20), width=2)
+    draw.text(
+        (PAGE_MARGIN, PAGE_H - 48),
+        "Scan the square target only · register the original PNG file in Encantar.js",
+        fill=(60, 60, 60),
+        font=font(18),
+    )
+    # WVSU badge bottom-right
+    badge = "WVSU"
+    bf = font(22, bold=True)
+    bw, bh = text_size(draw, badge, bf)
+    bx1 = PAGE_W - PAGE_MARGIN
+    bx0 = bx1 - bw - 28
+    by0 = PAGE_H - 54
+    draw.rounded_rectangle([bx0, by0, bx1, by0 + bh + 14], radius=8, fill=(20, 20, 20))
+    draw.text((bx0 + 14, by0 + 5), badge, fill=(255, 255, 255), font=bf)
+
+    # Marker square: use most of the page between header and footer
+    top = 180
+    bottom = PAGE_H - 100
+    side = min(PAGE_W - 2 * PAGE_MARGIN, bottom - top)
+    x = (PAGE_W - side) // 2
+    y = top + (bottom - top - side) // 2
+
+    marker = Image.open(OUT / marker_file).convert("RGB").resize(
+        (side, side), Image.Resampling.LANCZOS
+    )
+    # Soft page shadow
+    draw.rectangle([x + 6, y + 6, x + side + 6, y + side + 6], fill=(220, 220, 220))
+    page.paste(marker, (x, y))
+    draw.rectangle([x, y, x + side, y + side], outline=(20, 20, 20), width=3)
+
+    page.save(OUT / page_name, optimize=True)
+    return page
+
+
+def make_set_pdf(page_files: list[str], pdf_name: str):
+    """Multi-page PDF: one full page per marker (print the pack, no cutting)."""
+    pages = [Image.open(OUT / f).convert("RGB") for f in page_files]
+    if not pages:
+        return
+    pages[0].save(
+        OUT / pdf_name,
+        "PDF",
+        resolution=200.0,
+        save_all=True,
+        append_images=pages[1:],
+    )
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     plant_leaf()
@@ -466,21 +538,24 @@ def main():
     practice_marker(1, "Alpha pattern", 601)
     practice_marker(2, "Beta pattern", 602)
     practice_marker(3, "Gamma pattern", 603)
-    make_sheet(
-        ["plant-01-leaf.png", "plant-02-stem.png", "plant-03-root.png", "plant-04-flower.png"],
-        "sheet-plant-anatomy.png",
-        "Printable sheet · Scan-to-Analyze Plant Anatomy",
-    )
-    make_sheet(
-        [
-            "history-01-plaza.png",
-            "history-02-bridge.png",
-            "history-03-gate.png",
-            "history-04-market.png",
-        ],
-        "sheet-local-history.png",
-        "Printable sheet · AR Local History Spots (practice sites)",
-    )
+
+    plant_files = [
+        "plant-01-leaf.png",
+        "plant-02-stem.png",
+        "plant-03-root.png",
+        "plant-04-flower.png",
+    ]
+    history_files = [
+        "history-01-plaza.png",
+        "history-02-bridge.png",
+        "history-03-gate.png",
+        "history-04-market.png",
+    ]
+    art_files = ["art-01-practice.png", "art-02-practice.png", "art-03-practice.png"]
+    practice_files = ["practice-01.png", "practice-02.png", "practice-03.png"]
+
+    make_sheet(plant_files, "sheet-plant-anatomy.png", "Printable sheet · Scan-to-Analyze Plant Anatomy")
+    make_sheet(history_files, "sheet-local-history.png", "Printable sheet · AR Local History Spots (practice sites)")
     make_sheet(
         ["art-01-practice.png", "art-02-practice.png", "art-03-practice.png", "practice-01.png"],
         "sheet-art-and-practice.png",
@@ -491,7 +566,76 @@ def main():
         "sheet-workshop-practice.png",
         "Printable sheet · Hands-on Encantar practice set",
     )
-    print(f"Wrote {len(list(OUT.glob('*.png')))} files to {OUT}")
+
+    # Full-page (no scissors) layouts + PDF packs per set
+    plant_pages = []
+    for f, title in zip(
+        plant_files,
+        ["Leaf", "Stem", "Root", "Flower"],
+        strict=True,
+    ):
+        page = f"page-{f}"
+        make_full_page(
+            f,
+            page,
+            f"Plant anatomy · {title}",
+            "Scan-to-Analyze Plant Anatomy · full-page marker (no cutting)",
+        )
+        plant_pages.append(page)
+
+    history_pages = []
+    for f, title in zip(
+        history_files,
+        ["Town Plaza", "River Bridge", "Campus Gate", "Market Hall"],
+        strict=True,
+    ):
+        page = f"page-{f}"
+        make_full_page(
+            f,
+            page,
+            f"Local history · {title}",
+            "AR Local History Spots · full-page marker (no cutting)",
+        )
+        history_pages.append(page)
+
+    art_pages = []
+    for f, title in zip(
+        art_files,
+        ["Contrast Study A", "Rhythm Study B", "Balance Study C"],
+        strict=True,
+    ):
+        page = f"page-{f}"
+        make_full_page(
+            f,
+            page,
+            f"Art practice · {title}",
+            "Pocket AR Mini-Gallery · full-page marker (no cutting)",
+        )
+        art_pages.append(page)
+
+    practice_pages = []
+    for f, title in zip(
+        practice_files,
+        ["Alpha pattern", "Beta pattern", "Gamma pattern"],
+        strict=True,
+    ):
+        page = f"page-{f}"
+        make_full_page(
+            f,
+            page,
+            f"Workshop practice · {title}",
+            "Hands-on Encantar demo · full-page marker (no cutting)",
+        )
+        practice_pages.append(page)
+
+    make_set_pdf(plant_pages, "pack-plant-anatomy.pdf")
+    make_set_pdf(history_pages, "pack-local-history.pdf")
+    make_set_pdf(art_pages, "pack-art-practice.pdf")
+    make_set_pdf(practice_pages, "pack-workshop-practice.pdf")
+
+    pngs = list(OUT.glob("*.png"))
+    pdfs = list(OUT.glob("*.pdf"))
+    print(f"Wrote {len(pngs)} PNGs and {len(pdfs)} PDFs to {OUT}")
 
 
 if __name__ == "__main__":

@@ -13,7 +13,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { outputRequirements, workshopMeta } from "@/data/workshop"
+import {
+  backupBuildTools,
+  outputRequirements,
+  toolUrl,
+  workshopMeta,
+} from "@/data/workshop"
 
 export function OutputPage() {
   return (
@@ -170,12 +175,40 @@ export function OutputPage() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {workshopMeta.tools.map((tool) => (
-                <Badge key={tool} variant="secondary">
-                  {tool}
-                </Badge>
-              ))}
+              {workshopMeta.tools.map((tool) => {
+                const href = toolUrl(tool)
+                return href ? (
+                  <a key={tool} href={href} target="_blank" rel="noreferrer">
+                    <Badge
+                      variant="secondary"
+                      className="cursor-pointer hover:bg-foreground hover:text-background"
+                    >
+                      {tool}
+                    </Badge>
+                  </a>
+                ) : (
+                  <Badge key={tool} variant="secondary">
+                    {tool}
+                  </Badge>
+                )
+              })}
             </div>
+            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+              Build backup if AI Studio tokens run out:{" "}
+              {backupBuildTools.map((t, i) => (
+                <span key={t.name}>
+                  {i > 0 && " · "}
+                  <a
+                    href={t.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-foreground underline-offset-2 hover:underline"
+                  >
+                    {t.name}
+                  </a>
+                </span>
+              ))}
+            </p>
           </CardContent>
         </Card>
       </section>

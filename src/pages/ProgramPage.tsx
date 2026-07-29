@@ -19,7 +19,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { DownloadPdfButton } from "@/components/DownloadPdfButton"
-import { workshopMeta, scheduleItems, type ScheduleItem } from "@/data/workshop"
+import {
+  backupBuildTools,
+  toolUrl,
+  workshopMeta,
+  scheduleItems,
+  type ScheduleItem,
+} from "@/data/workshop"
 
 function kindBadge(item: ScheduleItem) {
   if (item.isBreak) return null
@@ -151,11 +157,25 @@ export function ProgramPage() {
               <div>
                 <p className="text-sm font-semibold mb-1">Tools to be introduced</p>
                 <ul className="text-sm text-muted-foreground space-y-0.5 columns-1 min-[400px]:columns-2">
-                  {workshopMeta.tools.map((t) => (
-                    <li key={t} className="break-inside-avoid">
-                      {t}
-                    </li>
-                  ))}
+                  {workshopMeta.tools.map((t) => {
+                    const href = toolUrl(t)
+                    return (
+                      <li key={t} className="break-inside-avoid">
+                        {href ? (
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="underline-offset-2 hover:text-foreground hover:underline"
+                          >
+                            {t}
+                          </a>
+                        ) : (
+                          t
+                        )}
+                      </li>
+                    )
+                  })}
                 </ul>
               </div>
             </div>
@@ -185,6 +205,36 @@ export function ProgramPage() {
             </div>
           </CardContent>
         </Card>
+      </section>
+
+      {/* Backup builders when AI Studio quota is exhausted */}
+      <section className="mb-10 rounded-lg border border-foreground/15 p-5 sm:p-6">
+        <h2 className="mb-1 font-semibold">
+          If Google AI Studio runs out of tokens
+        </h2>
+        <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+          Keep building with the same lesson plan and prompts. These browser tools
+          are workshop-approved backups for generating a working demo.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {backupBuildTools.map((tool) => (
+            <a
+              key={tool.name}
+              href={tool.url}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg border bg-card p-4 transition-colors hover:border-foreground/40 hover:bg-muted/40"
+            >
+              <p className="font-semibold">{tool.name}</p>
+              <p className="mt-1 break-all font-mono text-xs text-muted-foreground">
+                {tool.url.replace(/^https?:\/\//, "")}
+              </p>
+              <p className="mt-2 text-sm leading-snug text-muted-foreground">
+                {tool.role}
+              </p>
+            </a>
+          ))}
+        </div>
       </section>
 
       {/* How to use this site */}

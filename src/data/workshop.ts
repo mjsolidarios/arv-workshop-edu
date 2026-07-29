@@ -17,6 +17,9 @@ export const workshopMeta = {
     "Gemini Notebook",
     "Google Stitch",
     "Google AI Studio",
+    "Lovable",
+    "Bolt",
+    "Replit",
     "Encantar.js",
     "Three.js",
     "PixiJS",
@@ -34,10 +37,86 @@ export const workshopMeta = {
   learningOutcomes: [
     "Differentiate gamified learning from game-based learning and apply core game elements to a real lesson.",
     "Design a simple camera-based activity using AR markers, gestures, or body poses.",
-    "Use Gemini Notebook for lesson planning that integrates AR or motion interaction, Google Stitch for an accessible app interface, and Google AI Studio to develop the working classroom app and its content.",
+    "Use Gemini Notebook for lesson planning that integrates AR or motion interaction, Google Stitch for an accessible app interface, and Google AI Studio (or Lovable, Bolt, or Replit as backup) to develop the working classroom app and its content.",
     "Produce a demonstrable output (working demo, prototype, activity guide, or storyboard) ready for classroom try-out.",
   ],
 }
+
+/** Official links and roles for tools shown on the site and slides. */
+export interface WorkshopToolLink {
+  name: string
+  url: string
+  role: string
+  /** True when the tool is a fallback if Google AI Studio hits token or quota limits. */
+  isBackupBuilder?: boolean
+}
+
+export const workshopToolLinks: WorkshopToolLink[] = [
+  {
+    name: "Gemini Notebook",
+    url: "https://notebooklm.google/",
+    role: "Lesson planning with AR/motion integration",
+  },
+  {
+    name: "Google Stitch",
+    url: "https://stitch.withgoogle.com/",
+    role: "App screens and learner-flow design",
+  },
+  {
+    name: "Google AI Studio",
+    url: "https://aistudio.google.com/",
+    role: "Primary builder for the working browser app and content",
+  },
+  {
+    name: "Lovable",
+    url: "https://lovable.dev/",
+    role: "Backup app builder if AI Studio tokens or quota run out",
+    isBackupBuilder: true,
+  },
+  {
+    name: "Bolt",
+    url: "https://bolt.new/",
+    role: "Backup browser AI builder for rapid prototypes",
+    isBackupBuilder: true,
+  },
+  {
+    name: "Replit",
+    url: "https://replit.com/",
+    role: "Backup build-and-host option for a working demo",
+    isBackupBuilder: true,
+  },
+  {
+    name: "Encantar.js",
+    url: "https://encantar.dev/",
+    role: "Browser image-tracked AR",
+  },
+  {
+    name: "Google MediaPipe",
+    url: "https://ai.google.dev/edge/mediapipe/solutions/guide",
+    role: "Hand, pose, and face landmarks for motion interaction",
+  },
+  {
+    name: "Miro",
+    url: "https://miro.com/",
+    role: "Shared board for forums and collaboration",
+  },
+]
+
+export const backupBuildTools = workshopToolLinks.filter((t) => t.isBackupBuilder)
+
+export function toolUrl(name: string): string | undefined {
+  return workshopToolLinks.find(
+    (t) => t.name.toLowerCase() === name.toLowerCase()
+  )?.url
+}
+
+/** Slide-friendly bullets for when AI Studio is unavailable. */
+export const backupBuildToolBullets = [
+  "Lovable (lovable.dev) — paste the same app-build prompt and continue the prototype.",
+  "Bolt (bolt.new) — browser AI builder for a quick working demo when tokens run out.",
+  "Replit (replit.com) — build and host a shareable classroom demo if AI Studio is capped.",
+  "Keep Encantar.js or MediaPipe in the plan; faculty still verify answers and safety.",
+]
 
 export interface ScheduleItem {
   id: string
@@ -342,7 +421,15 @@ export const moduleDetails: Record<string, ModuleDetail> = {
         ],
       },
     ],
-    tools: ["Gemini Notebook", "Google AI Studio", "Google MediaPipe", "Miro"],
+    tools: [
+      "Gemini Notebook",
+      "Google AI Studio",
+      "Lovable",
+      "Bolt",
+      "Replit",
+      "Google MediaPipe",
+      "Miro",
+    ],
     tips: [
       "Start with a simple gamification layer — adding points to an existing quiz is a low-barrier entry point.",
       "Use a Miro board to collect participants’ prior experience with AR and group similar responses before the demos.",
@@ -518,6 +605,7 @@ export const moduleDetails: Record<string, ModuleDetail> = {
           "Ask AI Studio to create a browser-based app and integrate the appropriate library: Encantar.js for image-tracked AR or MediaPipe for hand and pose landmarks.",
           "Generate the quiz content, answer keys, feedback, and student-facing instructions as part of the app.",
           "Preview the app, test camera permission and interaction behavior, then describe errors and request focused code revisions in AI Studio.",
+          "If AI Studio tokens or daily quota run out, continue in Lovable (lovable.dev), Bolt (bolt.new), or Replit (replit.com) using the same prompt and libraries.",
           "Prepare distinct, detailed, asymmetrical reference images for tracking; plain shapes and repetitive patterns are usually poor targets. Test every image before printing a full set.",
           "Export and keep a copy of the working app files so later prompts do not overwrite a stable version.",
         ],
@@ -557,6 +645,9 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       "Gemini Notebook",
       "Google Stitch",
       "Google AI Studio",
+      "Lovable",
+      "Bolt",
+      "Replit",
       "Encantar.js",
       "Three.js",
       "PixiJS",
@@ -568,6 +659,7 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       "Pair participants: one holds the phone while the other interacts.",
       "Leave 10–15 minutes of freeplay after the structured walkthrough.",
       "When something fails (lighting, browser permission), treat it as a teachable classroom moment.",
+      "If Google AI Studio hits token or quota limits, switch to Lovable, Bolt, or Replit with the same build prompt.",
     ],
     samplePrompts: [
       {
@@ -745,13 +837,16 @@ export const moduleDetails: Record<string, ModuleDetail> = {
           "Student smartphones: best for small-group AR marker stations.",
           "No reliable internet: pre-download demos, use offline storyboard + printed markers for practice.",
           "Large class (40+): stations and rotations beat everyone scanning at once.",
-          "Beginner stack: Gemini Notebook (lesson plan) + Google AI Studio (app development) + MediaPipe (vision interaction) + paper scoring sheet.",
+          "Beginner stack: Gemini Notebook (lesson plan) + Google AI Studio or Lovable/Bolt/Replit (app development) + MediaPipe (vision interaction) + paper scoring sheet.",
         ],
       },
     ],
     tools: [
       "Gemini Notebook",
       "Google AI Studio",
+      "Lovable",
+      "Bolt",
+      "Replit",
       "Google MediaPipe",
       "Encantar.js",
       "Miro",
@@ -762,6 +857,7 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       "Collect and cluster subject-area ideas in Miro to build a shared bank of applications.",
       "Use a design template on the board: Course outcome → Authentic task → Interaction → Evidence of learning → AI support.",
       "Draft the AR or motion integration in Gemini Notebook before opening Stitch or AI Studio.",
+      "If AI Studio is capped, point people to Lovable, Bolt, or Replit rather than stopping the build.",
     ],
     samplePrompts: [
       {
@@ -848,10 +944,10 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       {
         heading: "Common Challenges and Solutions",
         points: [
-          "No coding background → describe the complete app in Google AI Studio, generate a working first version, and revise it through focused prompts; a detailed storyboard remains an accepted fallback.",
+          "No coding background → describe the complete app in Google AI Studio (or Lovable, Bolt, or Replit if tokens run out), generate a working first version, and revise it through focused prompts; a detailed storyboard remains an accepted fallback.",
           "Students lack smartphones → design for one shared laptop/webcam or station rotation.",
           "Abstract concept → use gesture classification, a spatial AR model, or an evidence-sorting task tied to disciplinary reasoning.",
-          "Unsure which tool → use AI Studio to develop the app, then use MediaPipe for gesture/pose interaction or Encantar.js for image-tracked AR.",
+          "Unsure which tool → use AI Studio first (Lovable, Bolt, or Replit as backup) to develop the app, then use MediaPipe for gesture/pose interaction or Encantar.js for image-tracked AR.",
           "Weak internet → prepare offline content packs; practice storyboard and printed markers first.",
           "Large class → team captains operate the camera; others use paper response boards.",
         ],
@@ -866,12 +962,20 @@ export const moduleDetails: Record<string, ModuleDetail> = {
         ],
       },
     ],
-    tools: ["Gemini Notebook", "Google AI Studio", "Miro"],
+    tools: [
+      "Gemini Notebook",
+      "Google AI Studio",
+      "Lovable",
+      "Bolt",
+      "Replit",
+      "Miro",
+    ],
     tips: [
       "Keep consultations brief so every group gets airtime.",
       "Peer feedback within the same subject area is often the most practical.",
       "If an idea is too big, cut scope: one course outcome, one authentic task, one interaction, and one evidence source.",
       "Ask groups to open their Gemini Notebook plan first so feedback targets pedagogy, not only the app build.",
+      "If a group is blocked by AI Studio tokens, switch them to Lovable, Bolt, or Replit immediately.",
     ],
     tryThis: [
       "State your idea in 30 seconds using the framework questions.",
@@ -902,7 +1006,7 @@ export const moduleDetails: Record<string, ModuleDetail> = {
           "Step 3 — Plan the lesson in Gemini Notebook (8 min): authentic task, procedure, game elements, evidence of learning, and AR/motion justification.",
           "Step 4 — Plan and design in Google Stitch (8 min): create the screen flow, interface, feedback states, and fallback controls from the notebook plan.",
           "Step 5 — Finalize the game content (7 min): rules, scoring, rewards, questions, and feedback using the approved screen flow.",
-          "Step 6 — Build in Google AI Studio (12 min): import or reference the Stitch design and generate the browser app and selected interaction.",
+          "Step 6 — Build in Google AI Studio (12 min): import or reference the Stitch design and generate the browser app and selected interaction. If tokens run out, switch to Lovable, Bolt, or Replit with the same prompt.",
           "Step 7 — Verify camera interaction (5 min): test the tracked image or gesture/pose path on the target device.",
           "Step 8 — Test and package (10 min): record one needed fix and prepare the demo, guide, or storyboard.",
         ],
@@ -948,6 +1052,9 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       "Gemini Notebook",
       "Google Stitch",
       "Google AI Studio",
+      "Lovable",
+      "Bolt",
+      "Replit",
       "Encantar.js",
       "Three.js",
       "PixiJS",
@@ -959,6 +1066,7 @@ export const moduleDetails: Record<string, ModuleDetail> = {
       "Lock the lesson plan in Gemini Notebook before opening Stitch—unclear outcomes slow every later step.",
       "Approve the learner flow in Stitch before asking AI Studio to build; late screen-flow changes consume testing time.",
       "Use AI Studio for the first working build, then reserve time to test the code, verify answers, simplify instructions, and add local context.",
+      "If AI Studio tokens run out mid-build, continue in Lovable, Bolt, or Replit—do not wait for quota reset during the block.",
       "Not coding? A detailed storyboard with wireframes is equally valued.",
       "Name a presenter and a demo operator before the next session starts.",
     ],
