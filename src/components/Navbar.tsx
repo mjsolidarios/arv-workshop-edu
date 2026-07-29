@@ -36,6 +36,7 @@ export function Navbar() {
     { href: "/", label: "Program" },
     { href: "/modules", label: "Modules" },
     { href: "/examples", label: "Examples" },
+    { href: "/markers", label: "Markers" },
     { href: "/output", label: "Output" },
   ]
 

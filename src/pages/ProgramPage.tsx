@@ -11,6 +11,7 @@ import {
   BookOpen,
   Sparkles,
   CheckCircle2,
+  ScanLine,
   Target,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
@@ -82,6 +83,12 @@ export function ProgramPage() {
               <Link to="/examples">
                 <Sparkles className="h-4 w-4" />
                 Classroom examples
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm" className="w-full sm:w-auto justify-center">
+              <Link to="/markers">
+                <ScanLine className="h-4 w-4" />
+                Printable markers
               </Link>
             </Button>
             <Button asChild variant="outline" size="sm" className="w-full sm:w-auto justify-center">

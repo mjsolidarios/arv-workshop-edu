@@ -5,6 +5,7 @@ import { ProgramPage } from "@/pages/ProgramPage"
 import { ModulesPage } from "@/pages/ModulesPage"
 import { ModuleDetailPage } from "@/pages/ModuleDetailPage"
 import { ExamplesPage } from "@/pages/ExamplesPage"
+import { MarkersPage } from "@/pages/MarkersPage"
 import { OutputPage } from "@/pages/OutputPage"
 import { PresentationsIndexPage } from "@/pages/PresentationsIndexPage"
 import { PresentationDeckPage } from "@/pages/PresentationDeckPage"
@@ -31,6 +32,7 @@ function AppShell() {
           <Route path="/modules" element={<ModulesPage />} />
           <Route path="/modules/:slug" element={<ModuleDetailPage />} />
           <Route path="/examples" element={<ExamplesPage />} />
+          <Route path="/markers" element={<MarkersPage />} />
           <Route path="/output" element={<OutputPage />} />
         </Routes>
       </main>
@@ -43,7 +45,7 @@ function AppShell() {
             Resource Person: Mr. Mark Joseph J. Solidarios
           </p>
           <p className="text-muted-foreground/80 leading-relaxed">
-            Modules · Classroom examples · Output guide for faculty participants
+            Modules · Classroom examples · Printable markers · Output guide
           </p>
         </div>
       </footer>

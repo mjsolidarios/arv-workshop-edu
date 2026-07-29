@@ -82,6 +82,16 @@ export function ExamplesPage() {
           class. Each example links game elements, camera interaction, and generative AI
           to a real college course outcome—including setup, play flow, and sample prompts.
         </p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Need printables for AR stations?{" "}
+          <Link
+            to="/markers"
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Download printable markers
+          </Link>{" "}
+          for plant anatomy, local history, art practice, and hands-on Encantar tests.
+        </p>
       </div>
 
       <section className="mb-10" aria-labelledby="working-examples-heading">
