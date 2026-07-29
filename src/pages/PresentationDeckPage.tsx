@@ -4,14 +4,17 @@ import {
   useMemo,
   useRef,
   useState,
+  type MouseEvent,
   type ReactNode,
 } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import {
   ArrowLeft,
   ArrowRight,
+  Check,
   ChevronLeft,
   ChevronRight,
+  Copy,
   Grid3X3,
   Maximize,
   Minimize,
@@ -25,6 +28,78 @@ import {
 
 function exampleHasContext(slide: Extract<PresentationSlide, { kind: "example" }>) {
   return Boolean(slide.learners || slide.competency || slide.aiRole)
+}
+
+function CopyFullPromptButton({ fullPrompt }: { fullPrompt: string }) {
+  const [copied, setCopied] = useState(false)
+  const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (resetTimer.current) clearTimeout(resetTimer.current)
+    }
+  }, [])
+
+  const handleCopy = async (event: MouseEvent) => {
+    // Keep deck advance/retreat tap zones from stealing the click.
+    event.preventDefault()
+    event.stopPropagation()
+    try {
+      await navigator.clipboard.writeText(fullPrompt)
+      setCopied(true)
+      if (resetTimer.current) clearTimeout(resetTimer.current)
+      resetTimer.current = setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Fallback for restricted clipboard environments.
+      try {
+        const ta = document.createElement("textarea")
+        ta.value = fullPrompt
+        ta.setAttribute("readonly", "")
+        ta.style.position = "fixed"
+        ta.style.left = "-9999px"
+        document.body.appendChild(ta)
+        ta.select()
+        document.execCommand("copy")
+        document.body.removeChild(ta)
+        setCopied(true)
+        if (resetTimer.current) clearTimeout(resetTimer.current)
+        resetTimer.current = setTimeout(() => setCopied(false), 2000)
+      } catch {
+        // Ignore; user can still select text manually.
+      }
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      onPointerDown={(e) => e.stopPropagation()}
+      className={cn(
+        "pointer-events-auto relative z-30 inline-flex min-h-[44px] shrink-0 items-center gap-2 rounded-lg border-2 px-3.5 py-2 text-base font-semibold transition-colors sm:min-h-[48px] sm:px-4 sm:text-lg",
+        copied
+          ? "border-foreground bg-foreground text-background"
+          : "border-foreground/20 bg-background text-foreground hover:bg-muted"
+      )}
+      aria-label={
+        copied
+          ? "Full prompt copied to clipboard"
+          : "Copy full prompt to clipboard"
+      }
+    >
+      {copied ? (
+        <>
+          <Check className="h-5 w-5" aria-hidden />
+          Copied full prompt
+        </>
+      ) : (
+        <>
+          <Copy className="h-5 w-5" aria-hidden />
+          Copy full prompt
+        </>
+      )}
+    </button>
+  )
 }
 
 /** How many progressive reveal steps a slide has after the base chrome. */
@@ -168,7 +243,10 @@ function SlideView({
           {slide.kind === "title" && (
             <div className="flex min-h-0 flex-1 flex-col justify-between gap-10">
               <div className="min-h-0 overflow-y-auto">
-                <Kicker>{slide.kicker}</Kicker>
+                {/* Full training title — sentence case for readability (not uppercase kicker). */}
+                <p className="mb-4 max-w-5xl text-base font-semibold leading-snug text-foreground/55 sm:mb-5 sm:text-lg md:text-xl md:leading-snug">
+                  {slide.kicker}
+                </p>
                 <h1 className="max-w-6xl text-balance text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
                   {slide.title}
                 </h1>
@@ -424,11 +502,16 @@ function SlideView({
           {slide.kind === "prompt" && (
             <div className="flex min-h-0 flex-1 flex-col">
               <header className="mb-4 shrink-0 sm:mb-5 md:mb-6">
-                <Kicker>{slide.kicker}</Kicker>
-                <SlideTitle>{slide.title}</SlideTitle>
-                <p className="mt-3 text-xl font-medium leading-snug text-foreground/65 sm:mt-3.5 sm:text-2xl md:text-[1.65rem]">
-                  Use for: {slide.useFor}
-                </p>
+                <div className="flex flex-wrap items-start justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <Kicker>{slide.kicker}</Kicker>
+                    <SlideTitle>{slide.title}</SlideTitle>
+                    <p className="mt-3 text-xl font-medium leading-snug text-foreground/65 sm:mt-3.5 sm:text-2xl md:text-[1.65rem]">
+                      Use for: {slide.useFor}
+                    </p>
+                  </div>
+                  <CopyFullPromptButton fullPrompt={slide.fullPrompt} />
+                </div>
               </header>
               <Fragment show={shown(1)} className="min-h-0 flex-1">
                 {/* Same body type scale as bullets / takeaways — large enough for the room. */}
@@ -884,20 +967,21 @@ export function PresentationDeckPage() {
             isFullscreen={isFullscreen}
           />
 
-          {/* Tap / click zones — right advances reveal or slide, left retreats */}
+          {/* Tap / click zones — right advances reveal or slide, left retreats.
+              Top band is left clear so header controls (e.g. Copy full prompt) stay clickable. */}
           <button
             type="button"
             aria-label="Previous reveal or slide"
             onClick={retreat}
             disabled={!canRetreat}
-            className="absolute inset-y-0 left-0 z-20 w-[22%] cursor-w-resize opacity-0 disabled:cursor-default sm:w-[16%]"
+            className="absolute bottom-0 left-0 top-28 z-20 w-[22%] cursor-w-resize opacity-0 disabled:cursor-default sm:top-32 sm:w-[16%]"
           />
           <button
             type="button"
             aria-label="Next reveal or slide"
             onClick={advance}
             disabled={!canAdvance}
-            className="absolute inset-y-0 right-0 z-20 w-[48%] cursor-e-resize opacity-0 disabled:cursor-default sm:w-[42%]"
+            className="absolute bottom-0 right-0 top-28 z-20 w-[48%] cursor-e-resize opacity-0 disabled:cursor-default sm:top-32 sm:w-[42%]"
           />
         </div>
 

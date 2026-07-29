@@ -71,7 +71,10 @@ export type PresentationSlide =
       kicker: string
       title: string
       useFor: string
+      /** Prompt fragment shown on this slide (may be one part of a split). */
       prompt: string
+      /** Complete original prompt for copy-to-clipboard (all parts). */
+      fullPrompt: string
     }
   | {
       id: string
@@ -287,7 +290,8 @@ function buildPromptSlides(
   slug: string
 ) {
   prompts.forEach((prompt, index) => {
-    const parts = splitPromptText(prompt.prompt)
+    const fullPrompt = prompt.prompt
+    const parts = splitPromptText(fullPrompt)
     parts.forEach((text, partIndex) => {
       const continued = partIndex > 0 ? " · continued" : ""
       const part = partLabel(partIndex, parts.length)
@@ -298,6 +302,7 @@ function buildPromptSlides(
         title: prompt.title,
         useFor: prompt.useFor,
         prompt: text,
+        fullPrompt,
       })
     })
   })
@@ -328,10 +333,12 @@ export function buildPresentationDeck(slug: string): PresentationDeck | undefine
   slides.push({
     id: `${slug}-title`,
     kind: "title",
-    kicker: `${workshopMeta.shortTitle} · ${kindLabel}`,
+    // Full training title — same string as the website hero (workshopMeta.title).
+    kicker: workshopMeta.title,
     title: module.title,
     subtitle: module.overview,
     meta: [
+      kindLabel,
       module.time,
       workshopMeta.venue,
       workshopMeta.resourcePerson,

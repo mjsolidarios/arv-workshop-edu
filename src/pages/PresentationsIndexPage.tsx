@@ -39,7 +39,7 @@ export function PresentationsIndexPage() {
           <p className="text-muted-foreground leading-relaxed max-w-3xl">
             Detailed HTML slide decks for every instructional block of{" "}
             <span className="text-foreground font-medium">
-              {workshopMeta.shortTitle}
+              {workshopMeta.title}
             </span>
             . Open a deck for full-screen delivery with keyboard navigation.
             These routes are intentionally unlisted in the main navigation.

@@ -1,6 +1,6 @@
 # Gamified Learning Workshop 2026
 
-A workshop website for **"Gamified Learning Using Augmented Reality, Motion-Based Interaction, and Generative AI"** — a faculty training event held on July 30, 2026 at WVSU Calinog Campus.
+A workshop website for **"Gamified Learning Using Augmented Reality, Motion-Based Interaction, and Generative AI in Digital Culture-Based Education"** — a faculty training event held on July 30, 2026 at WVSU Calinog Campus.
 
 ## Tech Stack
 

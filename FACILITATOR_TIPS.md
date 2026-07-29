@@ -1,6 +1,6 @@
 # Facilitator Tips
 
-## Gamified Learning Using Augmented Reality, Motion-Based Interaction, and Generative AI
+## Gamified Learning Using Augmented Reality, Motion-Based Interaction, and Generative AI in Digital Culture-Based Education
 
 **Date:** July 30, 2026  
 **Venue:** WVSU Calinog Campus  

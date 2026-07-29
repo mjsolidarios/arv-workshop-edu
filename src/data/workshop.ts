@@ -1,5 +1,6 @@
 export const workshopMeta = {
-  title: "Gamified Learning Using Augmented Reality, Motion-Based Interaction, and Generative AI",
+  title:
+    "Gamified Learning Using Augmented Reality, Motion-Based Interaction, and Generative AI in Digital Culture-Based Education",
   shortTitle: "ARV Workshop 2026",
   date: "July 30, 2026",
   day: "Thursday",
