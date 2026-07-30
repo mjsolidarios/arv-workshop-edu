@@ -30,7 +30,7 @@ This guide collects the facilitator-only notes for each workshop module. Keep it
 **Time:** 10:30 AM–12:00 PM
 
 - Keep the live demo simple—a flashcard quiz where the correct answer appears as a 3D object is powerful and achievable.
-- Show the tool chain once: Gemini Notebook (lesson plan + AR/motion integration) → Google Stitch (screens) → Google AI Studio (build).
+- Show the tool chain once: Gemini Notebook (lesson plan + AR/motion integration; Studio outputs such as slide decks, video overviews, infographics) → Google Stitch (screens) → Google AI Studio (build).
 - Backup builders if AI Studio tokens run out: Lovable (lovable.dev), Bolt (bolt.new), Replit (replit.com)—same prompt, same learning goal.
 - Pair participants: one holds the phone while the other interacts.
 - Leave 10–15 minutes of freeplay after the structured walkthrough.
@@ -41,7 +41,7 @@ This guide collects the facilitator-only notes for each workshop module. Keep it
 **Time:** 1:00–2:00 PM
 
 - Start from a lesson teachers already teach well—the game layer should enhance expertise, not replace it.
-- Model Gemini Notebook for lesson planning: every plan must name the AR or motion interaction and justify it against the course outcome.
+- Model Gemini Notebook for lesson planning: every plan must name the AR or motion interaction and justify it against the course outcome. Show that participants can generate slide decks, video overviews, infographics, and similar Studio outputs to better visualize and design the lesson before Stitch.
 - Remind participants that a storyboard or activity guide is a valid, high-value output.
 - Collect and cluster subject-area ideas in Miro to build a shared bank of applications.
 - Use a design template on the board: Course outcome → Authentic task → Interaction → Evidence of learning → AI support.
@@ -59,7 +59,7 @@ This guide collects the facilitator-only notes for each workshop module. Keep it
 **Time:** 2:30–3:30 PM
 
 - Ship one small complete activity rather than an ambitious unfinished one.
-- Lock the lesson plan in Gemini Notebook first (outcome, AR/motion choice, evidence); unclear plans waste Stitch and AI Studio time.
+- Lock the lesson plan in Gemini Notebook first (outcome, AR/motion choice, evidence); optionally generate a slide deck, video overview, or infographic so the group can see the design clearly. Unclear plans waste Stitch and AI Studio time.
 - Approve the learner flow in Stitch before asking AI Studio to build; late screen-flow changes consume testing time.
 - Use AI Studio for the first working build, then reserve time to test the code, verify answers, simplify instructions, and add local context.
 - If AI Studio hits token or quota limits mid-block, move groups to Lovable, Bolt, or Replit immediately—do not wait for reset.
