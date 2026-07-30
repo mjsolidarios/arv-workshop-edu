@@ -20,6 +20,7 @@ import {
   Minimize,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { QrCode } from "@/components/QrCode"
 import {
   buildPresentationDeck,
   getPresentationNeighbors,
@@ -127,6 +128,12 @@ function getRevealCount(slide: PresentationSlide): number {
       return 1
     case "two-column":
       return slide.left.length + slide.right.length
+    case "link-qr":
+      return (
+        (slide.description ? 1 : 0) +
+        slide.links.length +
+        (slide.footer ? 1 : 0)
+      )
     case "closing":
       return slide.bullets.length + (slide.nextTitle ? 1 : 0)
     default:
@@ -523,6 +530,71 @@ function SlideView({
               </Fragment>
             </div>
           )}
+
+          {slide.kind === "link-qr" && (() => {
+            const descStep = slide.description ? 1 : 0
+            return (
+              <div className="flex min-h-0 flex-1 flex-col">
+                <header className="mb-5 shrink-0 sm:mb-6 md:mb-8">
+                  {slide.kicker && <Kicker>{slide.kicker}</Kicker>}
+                  <SlideTitle>{slide.title}</SlideTitle>
+                  {slide.description && (
+                    <Fragment show={shown(1)}>
+                      <p className="mt-4 max-w-4xl text-lg leading-snug text-foreground/70 sm:mt-5 sm:text-xl md:text-2xl md:leading-snug">
+                        {slide.description}
+                      </p>
+                    </Fragment>
+                  )}
+                </header>
+                <div
+                  className={cn(
+                    "grid min-h-0 flex-1 content-start gap-4 overflow-y-auto sm:gap-5",
+                    slide.links.length <= 2
+                      ? "sm:grid-cols-2"
+                      : "sm:grid-cols-2 lg:grid-cols-3"
+                  )}
+                >
+                  {slide.links.map((link, i) => {
+                    const host = link.url
+                      .replace(/^https?:\/\//, "")
+                      .replace(/\/$/, "")
+                    return (
+                      <Fragment key={link.url} show={shown(descStep + 1 + i)}>
+                        <div className="flex flex-col items-center gap-4 rounded-2xl border-2 border-foreground/15 bg-muted/25 px-4 py-5 text-center sm:px-5 sm:py-6">
+                          <QrCode
+                            value={link.url}
+                            size={148}
+                            title={`Scan to open ${link.name}`}
+                            className="shadow-md"
+                          />
+                          <div className="min-w-0 w-full">
+                            <p className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl">
+                              {link.name}
+                            </p>
+                            <p className="mt-1.5 break-all font-mono text-sm text-foreground/55 sm:text-base">
+                              {host}
+                            </p>
+                            {link.role && (
+                              <p className="mt-2 text-base leading-snug text-foreground/65 sm:text-lg">
+                                {link.role}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </Fragment>
+                    )
+                  })}
+                </div>
+                {slide.footer && (
+                  <Fragment show={shown(descStep + slide.links.length + 1)}>
+                    <p className="mt-5 shrink-0 border-t-2 border-foreground/15 pt-4 text-lg font-medium leading-snug text-foreground/70 sm:mt-6 sm:pt-5 sm:text-xl md:text-2xl">
+                      {slide.footer}
+                    </p>
+                  </Fragment>
+                )}
+              </div>
+            )
+          })()}
 
           {slide.kind === "two-column" && (
             <div className="flex min-h-0 flex-1 flex-col">

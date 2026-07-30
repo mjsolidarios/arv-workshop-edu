@@ -19,10 +19,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { DownloadPdfButton } from "@/components/DownloadPdfButton"
+import { LinkQrCard, QrCode } from "@/components/QrCode"
 import {
   backupBuildTools,
   toolUrl,
   workshopMeta,
+  workshopToolLinks,
   scheduleItems,
   type ScheduleItem,
 } from "@/data/workshop"
@@ -192,19 +194,51 @@ export function ProgramPage() {
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-                <Button asChild variant="outline" size="sm" className="mt-3 w-full sm:w-auto">
-                  <a
-                    href={workshopMeta.miroTeamInviteUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Join the Miro team
-                  </a>
-                </Button>
+                <div className="mt-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                  <QrCode
+                    value={workshopMeta.miroTeamInviteUrl}
+                    size={96}
+                    title="Scan to join the Miro team"
+                  />
+                  <div className="space-y-2">
+                    <p className="text-xs text-muted-foreground">
+                      Scan to join on your phone, or open the invite:
+                    </p>
+                    <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
+                      <a
+                        href={workshopMeta.miroTeamInviteUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Join the Miro team
+                      </a>
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
+      </section>
+
+      {/* Scan-to-open tool links for in-room phones */}
+      <section className="mb-10 rounded-lg border border-foreground/15 p-5 sm:p-6">
+        <h2 className="mb-1 font-semibold">Scan to open workshop tools</h2>
+        <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+          Point your phone camera at a code to open the site. Useful when the
+          facilitator projects this page or a slide deck.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {workshopToolLinks.map((tool) => (
+            <LinkQrCard
+              key={tool.name}
+              name={tool.name}
+              url={tool.url}
+              role={tool.role}
+              qrSize={112}
+            />
+          ))}
+        </div>
       </section>
 
       {/* Backup builders when AI Studio quota is exhausted */}
@@ -213,26 +247,19 @@ export function ProgramPage() {
           If Google AI Studio runs out of tokens
         </h2>
         <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
-          Keep building with the same lesson plan and prompts. These browser tools
-          are workshop-approved backups for generating a working demo.
+          Keep building with the same lesson plan and prompts. Scan one of these
+          workshop-approved backups—same prompt, same learning goal.
         </p>
         <div className="grid gap-3 sm:grid-cols-3">
           {backupBuildTools.map((tool) => (
-            <a
+            <LinkQrCard
               key={tool.name}
-              href={tool.url}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-lg border bg-card p-4 transition-colors hover:border-foreground/40 hover:bg-muted/40"
-            >
-              <p className="font-semibold">{tool.name}</p>
-              <p className="mt-1 break-all font-mono text-xs text-muted-foreground">
-                {tool.url.replace(/^https?:\/\//, "")}
-              </p>
-              <p className="mt-2 text-sm leading-snug text-muted-foreground">
-                {tool.role}
-              </p>
-            </a>
+              name={tool.name}
+              url={tool.url}
+              role={tool.role}
+              qrSize={128}
+              layout="stack"
+            />
           ))}
         </div>
       </section>

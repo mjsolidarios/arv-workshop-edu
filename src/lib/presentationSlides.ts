@@ -1,5 +1,5 @@
 import {
-  backupBuildToolBullets,
+  backupBuildTools,
   moduleDetails,
   moduleOrder,
   scheduleItems,
@@ -86,6 +86,16 @@ export type PresentationSlide =
       left: string[]
       rightTitle: string
       right: string[]
+    }
+  | {
+      id: string
+      /** Large QR cards participants can scan from the projector. */
+      kind: "link-qr"
+      kicker?: string
+      title: string
+      description?: string
+      links: { name: string; url: string; role?: string }[]
+      footer?: string
     }
   | {
       id: string
@@ -400,12 +410,17 @@ export function buildPresentationDeck(slug: string): PresentationDeck | undefine
     if (usesAiBuilder) {
       slides.push({
         id: `${slug}-backup-builders`,
-        kind: "bullets",
+        kind: "link-qr",
         kicker: "Backup builders",
         title: "If Google AI Studio runs out of tokens",
-        bullets: backupBuildToolBullets,
-        footer:
-          "lovable.dev · bolt.new · replit.com — same prompt and learning goal still apply.",
+        description:
+          "Scan a code with your phone, then paste the same app-build prompt. Keep Encantar.js or MediaPipe in the plan.",
+        links: backupBuildTools.map((t) => ({
+          name: t.name,
+          url: t.url,
+          role: t.role,
+        })),
+        footer: "Same prompt and learning goal still apply.",
       })
     }
   }

@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { LinkQrCard } from "@/components/QrCode"
 import {
   backupBuildTools,
   outputRequirements,
@@ -193,22 +194,21 @@ export function OutputPage() {
                 )
               })}
             </div>
-            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-              Build backup if AI Studio tokens run out:{" "}
-              {backupBuildTools.map((t, i) => (
-                <span key={t.name}>
-                  {i > 0 && " · "}
-                  <a
-                    href={t.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-medium text-foreground underline-offset-2 hover:underline"
-                  >
-                    {t.name}
-                  </a>
-                </span>
-              ))}
-            </p>
+            <div className="mt-4 space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Build backup if AI Studio tokens run out — scan to open
+              </p>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {backupBuildTools.map((t) => (
+                  <LinkQrCard
+                    key={t.name}
+                    name={t.name}
+                    url={t.url}
+                    qrSize={88}
+                  />
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
       </section>

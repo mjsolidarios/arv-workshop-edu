@@ -18,12 +18,14 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { LinkQrCard } from "@/components/QrCode"
 import {
   backupBuildTools,
   classroomExamples,
   getModuleNeighbors,
   moduleDetails,
   toolUrl,
+  workshopToolLinks,
 } from "@/data/workshop"
 
 export function ModuleDetailPage() {
@@ -115,25 +117,75 @@ export function ModuleDetailPage() {
               )
             })}
           </div>
-          {module.tools.some((t) => /AI Studio|Lovable|Bolt|Replit/i.test(t)) && (
-            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              AI Studio tokens out? Continue in{" "}
-              {backupBuildTools.map((t, i) => (
-                <span key={t.name}>
-                  {i > 0 && ", "}
-                  <a
-                    href={t.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-medium text-foreground underline-offset-2 hover:underline"
-                  >
-                    {t.name}
-                  </a>
-                </span>
-              ))}
-              .
-            </p>
-          )}
+          {(() => {
+            const linkedTools = module.tools
+              .map((name) =>
+                workshopToolLinks.find(
+                  (t) => t.name.toLowerCase() === name.toLowerCase()
+                )
+              )
+              .filter((t): t is (typeof workshopToolLinks)[number] => Boolean(t))
+            const usesAiBuilder = module.tools.some((t) =>
+              /AI Studio|Lovable|Bolt|Replit/i.test(t)
+            )
+            const linkedNames = new Set(
+              linkedTools.map((t) => t.name.toLowerCase())
+            )
+            const missingBackups = usesAiBuilder
+              ? backupBuildTools.filter(
+                  (t) => !linkedNames.has(t.name.toLowerCase())
+                )
+              : []
+
+            if (linkedTools.length === 0 && missingBackups.length === 0) {
+              return null
+            }
+
+            return (
+              <div className="mt-4 space-y-4">
+                {linkedTools.length > 0 && (
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {linkedTools.map((tool) => (
+                      <LinkQrCard
+                        key={tool.name}
+                        name={tool.name}
+                        url={tool.url}
+                        role={tool.role}
+                        qrSize={100}
+                      />
+                    ))}
+                  </div>
+                )}
+                {usesAiBuilder && missingBackups.length === 0 && (
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    AI Studio tokens out? Scan{" "}
+                    <span className="font-medium text-foreground">
+                      Lovable, Bolt, or Replit
+                    </span>{" "}
+                    above and paste the same build prompt.
+                  </p>
+                )}
+                {missingBackups.length > 0 && (
+                  <div className="rounded-lg border border-foreground/10 bg-muted/30 p-4">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      AI Studio tokens out? Scan a backup
+                    </p>
+                    <div className="grid gap-3 sm:grid-cols-3">
+                      {missingBackups.map((t) => (
+                        <LinkQrCard
+                          key={t.name}
+                          name={t.name}
+                          url={t.url}
+                          role={t.role}
+                          qrSize={96}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })()}
         </section>
       )}
 
