@@ -565,7 +565,9 @@ function SlideView({
                             value={link.url}
                             size={148}
                             title={`Scan to open ${link.name}`}
-                            className="shadow-md"
+                            spotlightLabel={link.name}
+                            zoomable
+                            className="relative z-30 shadow-md"
                           />
                           <div className="min-w-0 w-full">
                             <p className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl">

@@ -187,34 +187,36 @@ export function ProgramPage() {
           <CardContent className="pt-5 pb-5">
             <div className="flex items-start gap-3">
               <UserPlus className="h-5 w-5 mt-0.5 text-muted-foreground shrink-0" />
-              <div>
+              <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold mb-1">Before the event</p>
                 <ul className="text-sm text-muted-foreground space-y-1 list-disc pl-4">
                   {workshopMeta.prerequisites.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-                <div className="mt-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-                  <QrCode
-                    value={workshopMeta.miroTeamInviteUrl}
-                    size={96}
-                    title="Scan to join the Miro team"
-                  />
-                  <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground">
-                      Scan to join on your phone, or open the invite:
-                    </p>
-                    <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
-                      <a
-                        href={workshopMeta.miroTeamInviteUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Join the Miro team
-                      </a>
-                    </Button>
-                  </div>
-                </div>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-col items-center gap-3 rounded-lg border bg-muted/30 px-4 py-4 text-center">
+              <QrCode
+                value={workshopMeta.miroTeamInviteUrl}
+                size={128}
+                title="Scan to join the Miro team"
+                spotlightLabel="Join the Miro team"
+                zoomable
+              />
+              <div className="w-full space-y-2">
+                <p className="text-xs text-muted-foreground">
+                  Tap the code to enlarge, then scan with your phone
+                </p>
+                <Button asChild variant="outline" size="sm" className="w-full">
+                  <a
+                    href={workshopMeta.miroTeamInviteUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Join the Miro team
+                  </a>
+                </Button>
               </div>
             </div>
           </CardContent>
